@@ -50,11 +50,29 @@
         }
 
         .ServerStat {
-            display: inline-flex
+            display: inline-flex;
+            text-justify: center;
+            align-items: center;
         }
 
         .ServerStatContener {
             display: grid;
+        }
+
+        .StatTitle {
+            border: solid black 1px;
+            border-right: solid black 0px;
+            padding: 5px;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
+
+        .stat {
+            border: solid black 1px;
+            border-left: solid black 0px;
+            padding: 5px;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
         }
     </style>
 </head>
@@ -81,20 +99,20 @@
             <div class="ServerStatContener">
                 <h2>Etat du serveur physique</h2>
                 <div class="ServerStat">
-                    <h3>Occupation du disque dur :</h3>
-                    <p id="diskUsage">Erreur</p><p>&percnt;</p>
+                    <p class="StatTitle">Occupation du disque dur :</p>
+                    <p class="stat"><span id="diskUsage">Erreur</span> &percnt;</p>
                 </div>
-                <div class="ServerStat">
-                    <h3>Utilisation du processeur</h3>
-                    <p id="cpuUsage">Erreur</p>
+                <div class="ServerStat" id="cpu">
+                    <p class="StatTitle">Utilisation du processeur</p>
+                    <p class="stat"><span id="cpuUsage" >Erreur</span> &percnt;</p>
                 </div>
-                <div class="ServerStat">
-                    <h3>Utilisation de la mémoire</h3>
-                    <p id="memUsage">Erreur</p>
+                <div class="ServerStat" id="mem">
+                    <p class="StatTitle">Utilisation de la mémoire</p>
+                    <p class="stat"><span id="memUsage">Erreur</span> &percnt;</p>
                 </div>
-                <div class="ServerStat">
-                    <h3>Utilisation de la bande passante</h3>
-                    <p id="netUsage">Erreur</p>
+                <div class="ServerStat" id="bandwidth">
+                    <p class="StatTitle">Utilisation de la bande passante</p>
+                    <p id="netUsage" class="stat">Erreur</p>
                 </div>
             </div>
             <script>

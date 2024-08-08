@@ -22,5 +22,13 @@
         "ramMax": "2G",
         "port": "25565",
         "dir": "hh"
+    },
+    "tesst": {
+        "type": "vanilla",
+        "version": "1.16.5",
+        "ramMin": "1G",
+        "ramMax": "2G",
+        "port": "25565",
+        "dir": "tesst"
     }
 }

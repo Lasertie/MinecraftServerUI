@@ -97,7 +97,7 @@ def new_server():
             commands = json.load(f)
         
         # on utilise la librairie subprocess pour lancer le serveur avec la commande trouvé dans le fichier commands.json selon le type de serveur
-        command = commands[server_type]['install'] # ex pour forge: java -jar server.jar --installServer
+        command = commands[server_type][server_version]['install'] # ex pour forge: java -jar server.jar --installServer
         result = subprocess.run(command, cwd=server_name, capture_output=True)
         print(result.stdout)
         print(result.stderr)
@@ -230,6 +230,7 @@ def server_info():
         'memUsage': psutil.virtual_memory().percent,
         'cpuUsage': psutil.cpu_percent(interval=1),
         'bandwidth': psutil.net_io_counters().packets_recv + psutil.net_io_counters().packets_sent
+        #'totalBandwith':
     }
     return jsonify(data)
 
@@ -239,14 +240,14 @@ def servers_data():
 
 @app.route('/server')
 def server():
-    name = request.args.get('name')
     return render_template('server.html')
 
 @app.route('/servers')
 def servers():
     return render_template('servers.html')
 
-@app.route('/test')
+'''
+@app.route('/test') # test the code
 def codeTester():
     server_name = 'test'
     path = os.path.join(server_name, 'minecraft_server.*.jar')
@@ -258,5 +259,6 @@ def codeTester():
         print(new_name)
         os.rename(old_name, new_name)
         print(f"Renamed {old_name} to {new_name}")
+'''
 if __name__ == '__main__':
     app.run(debug=True)
