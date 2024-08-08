@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord du Serveur Minecraft</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #444;
+            color: #fff;
+            padding: 1rem;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 1rem;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        main {
+            padding: 1rem;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #77aaff 3px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        header ul {
+            padding: 0;
+            list-style: none;
+        }
+        header li {
+            float: left;
+            display: inline;
+            padding: 0 20px 0 20px;
+        }
+        .main {
+            padding: 20px;
+            background: #fff;
+            margin-top: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            border-bottom: 2px solid #77aaff;
+            padding-bottom: 10px;
+        }
+        .section table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .section table, th, td {
+            border: 1px solid #ddd;
+        }
+        .section table th, .section table td {
+            padding: 10px;
+            text-align: left;
+        }
+        .ctl button {
+            padding: 10px 20px;
+            background: #ff8616;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            box-shadow: black;
+        }
+        .ctl button:hover {
+            background: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 0.5rem;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        td {
+            background-color: #fff;
+        }
+
+        th:first-child,
+        td:first-child {
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Tableau de Bord du Serveur Minecraft</h1>
+        </div>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="/">Tableau de Bord</a></li>
+            <li><a href="/servers">Serveurs</a></li>
+            <li><a href="/new-server">Créer un serveur</a></li>
+            <li><a href="/settings">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="m21.51 14.59l-1.25-1.32a7.878 7.878 0 0 0-.06-2.9l1.22-1.32a.76.76 0 0 0 .14-.79a10.257 10.257 0 0 0-2.2-3.35a.74.74 0 0 0-.72-.19l-1.84.47a8.48 8.48 0 0 0-1.83-1l-.45-1.72a.73.73 0 0 0-.59-.55a9.92 9.92 0 0 0-1.89-.17a9.36 9.36 0 0 0-2.35.31a.73.73 0 0 0-.53.53l-.48 1.77a8.23 8.23 0 0 0-1.52.88l-1.82-.45a.73.73 0 0 0-.72.21a10 10 0 0 0-2.23 3.62a.76.76 0 0 0 .16.77l1.26 1.31a8.85 8.85 0 0 0-.1 1.27c0 .3 0 .6.05.9l-1.31 1.46a.75.75 0 0 0-.16.73a10 10 0 0 0 2 3.59a.75.75 0 0 0 .76.24l1.72-.44a7.918 7.918 0 0 0 2 1.23l.5 1.79a.77.77 0 0 0 .56.53c.721.163 1.459.247 2.2.25c.59-.006 1.178-.063 1.76-.17a.75.75 0 0 0 .59-.53l.47-1.69a8.109 8.109 0 0 0 2.38-1.34l1.76.4a.74.74 0 0 0 .73-.24a10.118 10.118 0 0 0 2-3.34a.76.76 0 0 0-.21-.75m-9.39 1.27a3.81 3.81 0 1 1-.021-7.619a3.81 3.81 0 0 1 .02 7.62" />
+                    </svg>Paramètres</a></li>
+        </ul>
+    </nav>
+    <div class="container main">
+        <div class="section">
+            <h2>Informations du Serveur</h2>
+            <table>
+                <tr>
+                    <th>Propriété</th>
+                    <th>Valeur</th>
+                </tr>
+                <tr>
+                    <td>Adresse IP</td>
+                    <td id="Ip">192.168.1.1</td>
+                </tr>
+                <tr>
+                    <td>Port</td>
+                    <td id="port">25565</td>
+                </tr>
+                <tr>
+                    <td>Version</td>
+                    <td id="version">Erreur</td>
+                </tr>
+                <tr>
+                    <td>Statut</td>
+                    <td id="Sstatus">Erreur</td>
+                </tr>
+            </table>
+        </div>
+        <div class="ctl">
+            <h2>Contrôles du Serveur</h2>
+            <button id="start">Démarrer</button>
+            <button id="stop">Arrêter</button>
+            <button id="restart">Redémarrer</button>
+        </div>
+        <div class="section">
+            <h2>Statistiques</h2>
+            <p>Joueurs en ligne:</p><p id="PlayerNB">E</p>
+            <p>Utilisation de la mémoire: <p id="memUsed">Erreur</p> GB / <p id="memTot">Erreur</p>GB</p>
+            <p>Utilisation du CPU: <p id="cpUsed">Erreur</p> %</p>
+        </div>
+    </div>
+    <script>
+        // recuperer le nom du serveur dans l'url (name)
+        const urlParams = new URLSearchParams(window.location.search);
+        const name = urlParams.get('name');
+        function updateServerInfo() {
+            fetch('/servers-info?name=' + name)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    document.getElementById('Ip').innerText = data.ip;
+                    document.getElementById('port').innerText = data.port;
+                    document.getElementById('version').innerText = data.version;
+                    document.getElementById('Sstatus').innerText = data.status;
+                    document.getElementById('PlayerNB').innerText = data.players;
+                    document.getElementById('memUsed').innerText = data.ramUsed;
+                    document.getElementById('memTot').innerText = data.ramMax;
+                    document.getElementById('cpUsed').innerText = data.cpUsed;
+            });
+        }
+        const start = document.getElementById('start')
+        start.addEventListener('click', () => {
+            fetch('/servers-ctrl?name=' + name + '&action=start')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                });
+        });
+        const stop = document.getElementById('stop')
+        stop.addEventListener('click', () => {
+            fetch('/servers-ctrl?name=' + name + '&action=stop')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                });
+        });
+        const restart = document.getElementById('restart')
+        restart.addEventListener('click', () => {
+            fetch('/servers-ctrl?name=' + name + '&action=restart')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                });
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            updateServerInfo();
+            setInterval(updateServerInfo, 5000);
+        });
+    </script>
+</body>
+</html>

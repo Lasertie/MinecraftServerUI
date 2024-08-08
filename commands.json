@@ -1,0 +1,26 @@
+{
+    "vanilla": {
+        "1.16.5": {
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop",
+            "install": "java -jar install.jar --installServer"
+        },
+        "1.17.1": {
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop",
+            "install": "java -jar install.jar --installServer"
+        }
+    },
+    "forge": {
+        "1.16.5": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        },
+        "1.17.1": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        }
+    }
+}

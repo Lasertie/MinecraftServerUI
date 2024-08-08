@@ -1,0 +1,22 @@
+{
+    "vanilla": {
+        "1.16.5": "https://launcher.mojang.com/download/Minecraft_Server.1.16.5.jar",
+        "1.17.1": "https://launcher.mojang.com/download/Minecraft_Server.1.17.1.jar"
+    },
+    "forge": {
+        "1.16.5": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.16.5-36.2.2/forge-1.16.5-36.2.2-installer.jar",
+        "1.17.1": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.17.1-37.0.0/forge-1.17.1-37.0.0-installer.jar"
+    },
+    "fabric": {
+        "1.16.5": "https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.7.4/fabric-installer-0.7.4.jar",
+        "1.17.1": "https://maven.fabricmc.net/net/fabricmc/fabric-installer/0.7.4/fabric-installer-0.7.4.jar"
+    },
+    "paper": {
+        "1.16.5": "https://papermc.io/api/v2/projects/paper/versions/1.16.5/builds/597/downloads/paper-1.16.5-597.jar",
+        "1.17.1": "https://papermc.io/api/v2/projects/paper/versions/1.17.1/builds/349/downloads/paper-1.17.1-349.jar"
+    },
+    "spigot": {
+        "1.16.5": "https://cdn.getbukkit.org/spigot/spigot-1.16.5.jar",
+        "1.17.1": "https://cdn.getbukkit.org/spigot/spigot-1.17.1.jar"
+    }
+}

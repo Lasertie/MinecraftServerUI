@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Serveur Minecraft</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #444;
+            color: #fff;
+            padding: 1rem;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 1rem;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        main {
+            padding: 1rem;
+        }
+
+        section {
+            margin-bottom: 2rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #444;
+        }
+
+        select {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        select option {
+            padding: 0.5rem;
+        }
+
+        select option:hover {
+            background-color: #f4f4f4;
+        }
+
+        select option:checked {
+            background-color: #f4f4f4;
+        }
+
+        select option:focus {
+            background-color: #f4f4f4;
+        }
+
+        select option:active {
+            background-color: #f4f4f4;
+        }
+
+        select option:checked {
+            background-color: #f4f4f4;
+        }
+
+        select option:checked:hover {
+            background-color: #f4f4f4;
+        }
+
+        select option:checked:focus {
+            background-color: #f4f4f4;
+        }
+
+        select option:checked:active {
+            background-color: #f4f4f4;
+        }
+
+        #servers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            list-style: none;
+        }
+
+        #servers li {
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 4px;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        #servers h2 {
+            margin-top: 0;
+        }
+
+        #servers p {
+            margin: 0;
+        }
+
+        #servers a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 0.5rem 1rem;
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        #servers a:hover {
+            background-color: #444;
+        }
+
+
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Gestion Serveur Minecraft</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="/">Tableau de Bord</a></li>
+            <li><a href="/servers">Serveurs</a></li>
+            <li><a href="/new-server">Créer un serveur</a></li>
+            <li><a href="#settings">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="m21.51 14.59l-1.25-1.32a7.878 7.878 0 0 0-.06-2.9l1.22-1.32a.76.76 0 0 0 .14-.79a10.257 10.257 0 0 0-2.2-3.35a.74.74 0 0 0-.72-.19l-1.84.47a8.48 8.48 0 0 0-1.83-1l-.45-1.72a.73.73 0 0 0-.59-.55a9.92 9.92 0 0 0-1.89-.17a9.36 9.36 0 0 0-2.35.31a.73.73 0 0 0-.53.53l-.48 1.77a8.23 8.23 0 0 0-1.52.88l-1.82-.45a.73.73 0 0 0-.72.21a10 10 0 0 0-2.23 3.62a.76.76 0 0 0 .16.77l1.26 1.31a8.85 8.85 0 0 0-.1 1.27c0 .3 0 .6.05.9l-1.31 1.46a.75.75 0 0 0-.16.73a10 10 0 0 0 2 3.59a.75.75 0 0 0 .76.24l1.72-.44a7.918 7.918 0 0 0 2 1.23l.5 1.79a.77.77 0 0 0 .56.53c.721.163 1.459.247 2.2.25c.59-.006 1.178-.063 1.76-.17a.75.75 0 0 0 .59-.53l.47-1.69a8.109 8.109 0 0 0 2.38-1.34l1.76.4a.74.74 0 0 0 .73-.24a10.118 10.118 0 0 0 2-3.34a.76.76 0 0 0-.21-.75m-9.39 1.27a3.81 3.81 0 1 1-.021-7.619a3.81 3.81 0 0 1 .02 7.62" />
+                    </svg>Paramètres</a></li>
+        </ul>
+    </nav>
+    <main>
+        <section id="listOfServers">
+            <ul id="servers">
+            </ul>
+        </section>
+        <script>
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get('name');
+            fetch('/servers-data')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    /* {
+                        "{nom du serveur}": {
+                            "status": "offline",
+                            "players": 0,
+                            "maxPlayers": 20
+                        }
+                    } */
+                    const servers = data;
+                    const serversList = document.getElementById('servers');
+                    for (const serverName in servers) {
+                        const server = servers[serverName];
+                        const li = document.createElement('li');
+                        li.innerHTML = `
+                            <h2>${serverName}</h2>
+                            <p>Statut: ${server.status}</p>
+                            <p>Joueurs: ${server.players}/${server.maxPlayers}</p>
+                            <a href="/server?name=${serverName}">Gérer</a>
+                        `;
+                        serversList.appendChild(li);
+                    }
+                });
+        </script>
+    </main>
+</body>
+
+</html>
