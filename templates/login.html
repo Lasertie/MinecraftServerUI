@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+            align-items: center;
+            justify-content: center;
+            /* // degrade de couleur */
+            background: linear-gradient(rgba(231, 177, 0, 0.5), rgba(189, 170, 2, 0.5));
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            /* background-color: linear-gradient(rgba(56, 53, 206, 0.5), rgba(0, 54, 0, 0.5)); */
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 50%;
+            margin: 0 auto;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input {
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #ff9900;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ff6600;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 5px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            display: flex;
+
+        }
+
+        li:nth-child(odd) {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <h2>Login</h2>
+    <form method="POST" action="{{ url_for('login') }}">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <button type="submit">Login</button>
+    </form>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>

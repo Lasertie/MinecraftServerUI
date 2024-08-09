@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,30 +12,36 @@
             margin: auto;
             overflow: hidden;
         }
-        
+
         .main {
             padding: 20px;
             /* background: #fff; */
             margin-top: 20px;
         }
+
         .section {
             margin-bottom: 20px;
         }
+
         .section h2 {
             border-bottom: 2px solid #77aaff;
             padding-bottom: 10px;
         }
+
         .section table {
             width: 100%;
             border-collapse: collapse;
         }
+
         /* .section table, th, td {
             border: 1px solid #ddd;
         } */
-        .section table th, .section table td {
+        .section table th,
+        .section table td {
             padding: 10px;
             text-align: left;
         }
+
         .ctl button {
             padding: 10px 20px;
             background: #ff8616;
@@ -43,6 +50,7 @@
             cursor: pointer;
             box-shadow: black;
         }
+
         .ctl button:hover {
             background: #0056b3;
         }
@@ -54,7 +62,8 @@
             /* color: black; */
         }
 
-        th, td {
+        th,
+        td {
             /* border: 1px solid #ccc; */
             padding: 0.5rem;
         }
@@ -91,12 +100,28 @@
             align-content: right;
         }
 
+        #redZone {
+            background-color: #d60000;
+            color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            border: 3px outset #ff0000;
+        }
+
+        #redZone ul {
+            list-style-type: none;
+            padding: 0;
+            display: inline-flex;
+            gap: 1rem;
+        }
+
         footer {
             padding: 10px;
             height: 10px;
         }
     </style>
 </head>
+
 <body>
     <header>
         <h1>Gestion Serveur Minecraft</h1>
@@ -133,9 +158,9 @@
                             d="m21.51 14.59l-1.25-1.32a7.878 7.878 0 0 0-.06-2.9l1.22-1.32a.76.76 0 0 0 .14-.79a10.257 10.257 0 0 0-2.2-3.35a.74.74 0 0 0-.72-.19l-1.84.47a8.48 8.48 0 0 0-1.83-1l-.45-1.72a.73.73 0 0 0-.59-.55a9.92 9.92 0 0 0-1.89-.17a9.36 9.36 0 0 0-2.35.31a.73.73 0 0 0-.53.53l-.48 1.77a8.23 8.23 0 0 0-1.52.88l-1.82-.45a.73.73 0 0 0-.72.21a10 10 0 0 0-2.23 3.62a.76.76 0 0 0 .16.77l1.26 1.31a8.85 8.85 0 0 0-.1 1.27c0 .3 0 .6.05.9l-1.31 1.46a.75.75 0 0 0-.16.73a10 10 0 0 0 2 3.59a.75.75 0 0 0 .76.24l1.72-.44a7.918 7.918 0 0 0 2 1.23l.5 1.79a.77.77 0 0 0 .56.53c.721.163 1.459.247 2.2.25c.59-.006 1.178-.063 1.76-.17a.75.75 0 0 0 .59-.53l.47-1.69a8.109 8.109 0 0 0 2.38-1.34l1.76.4a.74.74 0 0 0 .73-.24a10.118 10.118 0 0 0 2-3.34a.76.76 0 0 0-.21-.75m-9.39 1.27a3.81 3.81 0 1 1-.021-7.619a3.81 3.81 0 0 1 .02 7.62" />
                     </svg>Paramètres</a></li>
             <li><label class="switch">
-                <input type="checkbox" id="lumos">
-                <span class="slider"></span>
-            </label></li>
+                    <input type="checkbox" id="lumos">
+                    <span class="slider"></span>
+                </label></li>
         </ul>
     </nav>
     <div class="container main">
@@ -176,6 +201,19 @@
             <p>Utilisation de la mémoire: <span id="memUsed">Erreur</span> GB / <span id="memTot">Erreur</span>GB</p>
             <p>Utilisation du CPU: <span id="cpUsed">Erreur</span> %</p>
         </div>
+        <div class="section" id="redZone">
+            <h2>Zone Rouge</h2>
+            <p>Les actions suivantes sont irréversibles:</p>
+            <ul>
+                <li>
+                    <p id="firstAddvert" style="display: none;">Attention: cette action est irréversible</p>
+                    <p id="secondAddvert" style="display: none;">Voullez vous vraiment le supprimer ?</p>
+                    <p id="3Addvert" style="display: none;">Je suis chiant hein</p>
+                    <input type="submit" id="delete" value="Supprimer le serveur">
+                    <input type="submit" name="Oui" id="OuiTuEs" style="display: none;">
+                </li>
+            </ul>
+        </div>
     </div>
     <script>
         // recuperer le nom du serveur dans l'url (name)
@@ -194,7 +232,7 @@
                     document.getElementById('memUsed').innerText = data.ramUsed;
                     document.getElementById('memTot').innerText = data.ramMax;
                     document.getElementById('cpUsed').innerText = data.cpUsed;
-            });
+                });
         }
         const start = document.getElementById('start')
         start.addEventListener('click', () => {
@@ -226,10 +264,41 @@
                     clearInterval
                 });
         });
+        const del = document.getElementById('delete')
+        del.addEventListener('click', () => {
+            // verifier si l'utilisateur est sur de vouloir supprimer le serveur
+            const firstAddvert = document.getElementById('firstAddvert');
+            const secondAddvert = document.getElementById('secondAddvert');
+            const thirdAddvert = document.getElementById('3Addvert');
+            const OuiTuEs = document.getElementById('OuiTuEs');
+            firstAddvert.style.display = 'block';
+            // si l'utilisateur clique une deuxieme fois
+            del.addEventListener('click', () => {
+                secondAddvert.style.display = 'block';
+                // si l'utilisateur clique une troisieme fois
+                del.addEventListener('click', () => {
+                    thirdAddvert.style.display = 'block';
+                    OuiTuEs.style.display = 'block';
+                    OuiTuEs.addEventListener('click', () => {
+                        window.location.href = '';
+                    });
+                    del.addEventListener('click', () => {
+                        fetch('/servers-ctrl?name=' + name + '&action=delete')
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(data);
+                                window.location.href = '/servers';
+                            });
+                    });
+                });
+            });
+        });
         document.addEventListener('DOMContentLoaded', () => {
             updateServerInfo();
         });
-    </script><script src="js/script.js"></script>
+    </script>
+    <script src="js/script.js"></script>
     <footer></footer>
 </body>
+
 </html>

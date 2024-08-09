@@ -96,3 +96,87 @@ input:checked+.slider {
 input:checked+.slider:before {
     transform: translateX(26px);
 }
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+label {
+    font-weight: bold;
+}
+
+input,
+select {
+    padding: 0.5rem;
+    border: 2px solid #00000000;
+    border-radius: 4px;
+    background-color: #e0e0e0;
+}
+
+input:active {
+    border: 1px solid #f4f4f4;
+}
+
+input:hover {
+    border: 2px solid #ffb310
+}
+
+input[type="submit"] {
+    background-color: #ffb310;
+    color: #fff;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #ffc400;
+}
+
+select {
+    padding: 0.5rem;
+    border: 2px solid #ffffff00;
+    border-radius: 4px;
+}
+
+select:hover {
+    border: 2px solid #ffb310;
+}
+
+select option {
+    padding: 0.5rem;
+}
+
+select option:hover {
+    background-color: #e0e0e0;
+}
+
+select option:checked {
+    background-color: #f4f4f4;
+}
+
+select option:focus {
+    background-color: #f4f4f4;
+}
+
+select option:active {
+    background-color: #f4f4f4;
+}
+
+select option:checked {
+    background-color: #f4f4f4;
+}
+
+select option:checked:hover {
+    background-color: #f4f4f4;
+}
+
+select option:checked:focus {
+    background-color: #f4f4f4;
+}
+
+select option:checked:active {
+    background-color: #f4f4f4;
+}

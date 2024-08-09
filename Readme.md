@@ -37,9 +37,8 @@ A simple GUI for managing a Minecraft server.
 ## Installation
 1. Download the latest release from the [releases page]()
 2. Extract the zip file
-3. Run the executable file (Start.bat for Windows, Start.sh for Linux)
-4. Follow the instructions in the cli
-5. Open a web browser and go to `localhost:'port'` (port is the port you entered in the cli)
+3. Run the python file [install.py](install.py)
+5. Open a web browser and go to `localhost:'port'` (port is the port in [config.conf](config.conf))
 6. Enjoy!
 
 ## Screenshots

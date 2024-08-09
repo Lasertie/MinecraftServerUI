@@ -13,38 +13,62 @@
             align-items: center;
             gap: 2rem;
         }
-
-        section {
-            margin-bottom: 2rem;
-            width: 80%;
-        }
-
-        .ServerStat {
-            display: inline-flex;
-            text-justify: center;
+        #logout {
+            height: 2rem;
+            width: 2rem;
+            background-color: #ff9900;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
             align-items: center;
-            width: 80%;
-            height: 20px;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.4);
-
         }
 
-        .ServerStatContener {
+        #logout:hover {
+            background-color: #ff6600;
+        }
+
+        #settings {
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            width: 80%;
+            width: 50%;
         }
 
-        .StatTitle {
-            padding: 5px;
-
+        #settings div {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
 
-        .stat {
-            padding: 5px;
+        #settings label {
+            font-weight: bold;
+        }
+
+        #settings input {
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        #settings button {
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #ff9900;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        #settings button:hover {
+            background-color: #ff6600;
+        }
+
+        nav ul li {
+            display: flex;
+            align-items: center;
         }
     </style>
 </head>
@@ -55,7 +79,11 @@
     </header>
     <nav>
         <ul>
-            <li></li>
+            <li>
+                <form action="logout">
+                    <button type="submit" id="logout"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="M13.477 21.245H8.34a4.918 4.918 0 0 1-5.136-4.623V7.378A4.918 4.918 0 0 1 8.34 2.755h5.136"/><path stroke-miterlimit="10" d="M20.795 12H7.442"/><path stroke-linejoin="round" d="m16.083 17.136l4.404-4.404a1.04 1.04 0 0 0 0-1.464l-4.404-4.404"/></g></svg></button>
+                </form>
+            </li>
             <li id="current"><a href="/"><svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"
                         viewBox="0 0 56 56">
                         <path fill="currentColor"
@@ -92,8 +120,30 @@
         </ul>
     </nav>
     <main>
-        
+        <h2>Paramètres</h2>
+        <form id="settings" method="GET" action="/settings-ctl">
+        </form>
+        <script>
+            const settings = document.getElementById('settings');
+            fetch('/settings-ctl?action=get')
+                .then(response => response.json())
+                .then(data => {
+                    for (const key in data) {
+                        const setting = document.createElement('div');
+                        setting.innerHTML = `
+                            <label for="${key}">${key}</label>
+                            <input type="text" id="${key}" name="${key}" value="${data[key]}">
+                        `;
+                        settings.appendChild(setting);
+                    }
+                    const submit = document.createElement('button');
+                    submit.type = 'submit';
+                    submit.textContent = 'Enregistrer';
+                    settings.appendChild(submit);
+                });
+        </script>
         <script src="js/script.js"></script>
     </main>
 </body>
+
 </html>

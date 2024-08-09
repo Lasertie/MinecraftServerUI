@@ -7,26 +7,74 @@ import requests
 import mcstatus
 from mcrcon import MCRcon
 import glob
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 app = Flask(__name__)
+# clé generée aléatoirement a chaque fois que le serveur est lancé
+app.secret_key = 'os.urandom(24)'
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+class User(UserMixin):
+    def __init__(self, id, username, password):
+        self.id = id
+        self.username = username
+        self.password = password
+
+users = {
+    'user1': User('1', 'user1', 'password1'), # a remplacer par une base de données
+    'user2': User('2', 'user2', 'password2') # to replace with a database
+}
+
+@login_manager.user_loader
+def load_user(user_id):
+    for user in users.values():
+        if user.id == user_id:
+            return user
+    return None
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = users.get(username)
+        if user and user.password == password:
+            login_user(user)
+            return redirect(url_for('home'))
+        else:
+            flash('Invalid username or password')
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
 @app.route('/favicon.ico') # retour de l'icone
 def favicon():
     return send_file('favicon.ico')
 
 @app.route('/css/style.css') # retour du fichiers css
+@login_required
 def send_css():
     return send_file('templates/css/style.css')
 
 @app.route('/js/script.js') # retour du fichiers js
+@login_required
 def send_js():
     return send_file('templates/js/script.js')
 
 @app.route('/') # retour de la page d'accueil
+@login_required
 def home():
     return render_template('index.html')
 
 @app.route('/new-server')
+@login_required
 def new_server():
     if request.args.get('serverName') and request.args.get('serverType') and request.args.get('serverVersion'):
         # recuperation des données du formulaire
@@ -136,6 +184,7 @@ def new_server():
     return render_template('new-server.html')
 
 @app.route('/servers-info') # infos sur un serveur
+@login_required
 def servers_info():
     server_name = request.args.get('name')
     with open('servers.json', 'r') as f:
@@ -169,6 +218,7 @@ def servers_info():
     return jsonify({'name': 'Server not found'})
 
 @app.route('/servers-ctrl') # controle d'un serveur
+@login_required
 def servers_ctrl():
     server_name = request.args.get('name')
     action = request.args.get('action')
@@ -210,11 +260,17 @@ def servers_ctrl():
                 if process.name() == 'java' and server_dir in process.cmdline():
                     process.kill()
                     break
+        elif action == 'delete':
+            os.system(f'rm -r "{server_dir}"')
+            del servers[server_name]
+            with open('servers.json', 'w') as f:
+                json.dump(servers, f)
         return jsonify({'status': 'ok'})
     print('Server not found')
     return jsonify({'status': 'error'})
 
 @app.route('/server-versions') # retour des versions des serveurs
+@login_required
 def server_versions():
     # chargé le fichier json des versions
     with open('versions.json', 'r') as f: 
@@ -235,6 +291,7 @@ def server_versions():
     return jsonify(response)
 
 @app.route('/server-info') # retour json de l'utilisation du disque dur, de la ram, du processeur, et de la bande passante
+@login_required
 def server_info():
     data = {
         'diskUsage': psutil.disk_usage('/').percent,
@@ -246,20 +303,48 @@ def server_info():
     return jsonify(data)
 
 @app.route('/servers-data')
+@login_required
 def servers_data():
     return send_file('servers.json')
 
 @app.route('/server')
+@login_required
 def server():
     return render_template('server.html')
 
 @app.route('/servers')
+@login_required
 def servers():
     return render_template('servers.html')
 
 @app.route('/settings')
+@login_required
 def settings():
     return render_template('settings.html')
+
+@app.route('/settings-ctl')
+@login_required
+def settings_ctrl():
+    action = request.args.get('action')
+    if action == 'get':
+        with open('settings.json', 'r') as f:
+            settings = json.load(f)
+        return jsonify(settings)
+    elif not action:
+        with open('settings.json', 'w') as f:
+            json.dump(request.args, f)
+        return jsonify({'status': 'ok'})
+    return jsonify({'status': 'error'})
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    return render_template('500.html'), 500
+
+
 
 '''
 @app.route('/test') # test the code
