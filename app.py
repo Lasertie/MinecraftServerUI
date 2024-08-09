@@ -14,6 +14,14 @@ app = Flask(__name__)
 def favicon():
     return send_file('favicon.ico')
 
+@app.route('/css/style.css') # retour du fichiers css
+def send_css():
+    return send_file('templates/css/style.css')
+
+@app.route('/js/script.js') # retour du fichiers js
+def send_js():
+    return send_file('templates/js/script.js')
+
 @app.route('/') # retour de la page d'accueil
 def home():
     return render_template('index.html')
@@ -58,16 +66,19 @@ def new_server():
             'ramMin': server_ram_min,
             'ramMax': server_ram_max,
             'port': server_port,
-            'dir': server_name
+            'dir': server_path
         }
+
+        # Chemin du dossier du serveur
+        server_path = f'servers/{server_name}'
         # on crée le dossier du serveur
-        os.system(f'mkdir "{server_name}"')
-        os.system(f'cd {server_name}')
+        os.system(f'mkdir "{server_path}"')
+        os.system(f'cd {server_path}')
 
         with open('versions.json', 'r') as f:
             versions = json.load(f)
         url = versions[server_type][server_version]
-        file_dir = os.path.join(server_name, 'install.jar')
+        file_dir = os.path.join(server_path, 'install.jar')
         print("Downloading file ...")
         try:
             with requests.get(url, stream=True) as r:
@@ -86,11 +97,11 @@ def new_server():
         except Exception as e:
             print(f'Erreur inconnue {e}')
 
-        with open(server_name + '/eula.txt', 'w') as f:
+        with open(server_path + '/eula.txt', 'w') as f:
             f.write('eula=true')
         
         # properties
-        with open(server_name + '/server.properties', 'w') as f:
+        with open(f'{server_path}/server.properties', 'w') as f:
             f.write(f'server-port={server_port}\nlevel-seed={server_seed}\nmax-players=20\nserver-ip=\nwhite-list=false\nenable-command-block=false\nenable-rcon=false\nrcon.password=\nrcon.port=25575\nmotd=A Minecraft Server\nlevel-name=world\nlevel-type=DEFAULT\ngenerator-settings=\nforce-gamemode=false\nhardcore=false\npvp=true\ndifficulty=1\nallow-flight=false\nspawn-npcs=true\nspawn-animals=true\nspawn-monsters=true\ngenerate-structures=true\nspawn-protection=16\nmax-tick-time=60000\nview-distance=10\nmax-build-height=256\nserver-ip=\nresource-pack=\nresource-pack-sha1=\nonline-mode=true\nallow-nether=true\nbroadcast-rcon-to-ops=true\nenable-query=false\nplayer-idle-timeout=0\nop-permission-level=4\nprevent-proxy-connections=false\nresource-pack=\nentity-broadcast-range-percentage=100\nplayer-sampling=12\nplayer-queue-depth=3\nforce-resources=false\nfunction-permission-level=2\nrequire-resource-pack=false\n')
 
         with open('commands.json', 'r') as f:
@@ -98,23 +109,23 @@ def new_server():
         
         # on utilise la librairie subprocess pour lancer le serveur avec la commande trouvé dans le fichier commands.json selon le type de serveur
         command = commands[server_type][server_version]['install'] # ex pour forge: java -jar server.jar --installServer
-        result = subprocess.run(command, cwd=server_name, capture_output=True)
+        result = subprocess.run(command, cwd=server_path, capture_output=True)
         print(result.stdout)
         print(result.stderr)
 
         # del install ?
 
         # renommer le fichier minecraft_server.*.*.*.jar en server.jar peux importe la fin
-        path = os.path.join(server_name, 'minecraft_server.*.jar')
+        path = os.path.join(server_path, 'minecraft_server.*.jar')
         files = glob.glob(path)
         if files:
             old_name = files[0]
-            new_name = os.path.join(server_name, 'server.jar')
+            new_name = os.path.join(server_path, 'server.jar')
             os.rename(old_name, new_name)
             print(f"Renamed {old_name} to {new_name}")
 
         # lancer le serveur avec les paramètres de ram
-        result = subprocess.run(['java', '-Xms' + server_ram_min,'G -Xmx' + server_ram_max,'G -jar', 'server.jar', 'nogui'], cwd=server_name, capture_output=True)
+        result = subprocess.run(['java', '-Xms' + server_ram_min,'G -Xmx' + server_ram_max,'G -jar', 'server.jar', 'nogui'], cwd=server_path, capture_output=True)
         print(result.stdout) # a changer pour fonctionner avec le fichier de commandes.json
                             # en: to change to work with the commands.json file
         print(result.stderr)
@@ -245,6 +256,10 @@ def server():
 @app.route('/servers')
 def servers():
     return render_template('servers.html')
+
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
 
 '''
 @app.route('/test') # test the code

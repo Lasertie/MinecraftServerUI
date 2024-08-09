@@ -92,47 +92,8 @@
         </ul>
     </nav>
     <main>
-        <div class="ServerStatContener">
-            <h2>Etat du serveur physique</h2>
-            <div class="ServerStat">
-                <p class="StatTitle">Occupation du disque dur :</p>
-                <p class="stat"><span id="diskUsage">Erreur</span> &percnt;</p>
-            </div>
-            <div class="ServerStat" id="cpu">
-                <p class="StatTitle">Utilisation du processeur</p>
-                <p class="stat"><span id="cpuUsage">Erreur</span> &percnt;</p>
-            </div>
-            <div class="ServerStat" id="mem">
-                <p class="StatTitle">Utilisation de la mémoire</p>
-                <p class="stat"><span id="memUsage">Erreur</span> &percnt;</p>
-            </div>
-            <div class="ServerStat" id="bandwidth">
-                <p class="StatTitle">Utilisation de la bande passante</p>
-                <p id="netUsage" class="stat">Erreur</p>
-            </div>
-        </div>
-        <script>
-            function updateDashboard() {
-                // Mettre à jour les informations du serveur
-                fetch('/server-info')
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data);
-                        document.getElementById('diskUsage').textContent = data.diskUsage;
-                        document.getElementById('cpuUsage').textContent = data.cpuUsage;
-                        document.getElementById('memUsage').textContent = data.memUsage;
-                        document.getElementById('netUsage').textContent = data.bandwidth;
-                    })
-                    .catch(error => console.error('Erreur:', error));
-            }
-            document.addEventListener('DOMContentLoaded', () => {
-                updateDashboard();
-                setInterval(updateDashboard, 1000);
-            });
-        </script>
+        
         <script src="js/script.js"></script>
-        <!-- What do we add ? -->
     </main>
 </body>
-
 </html>

@@ -1,0 +1,5 @@
+flask
+mcrcon
+psutil
+glob
+mcstatus
