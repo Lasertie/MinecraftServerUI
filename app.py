@@ -90,16 +90,16 @@ def new_server():
             server_ram_max = request.args.get('serverRamMax')
         else:
             server_ram_max = '2G'
-        # si le port est spécifié on le récupère
         if request.args.get('serverPort'):
             server_port = request.args.get('serverPort')
         else:
             server_port = '25565'
-        # si le seed est spécifié on le récupère
         if request.args.get('serverSeed'):
             server_seed = request.args.get('serverSeed')
         else:
             server_seed = ''
+        if request.args.get('serverMaxPlayers'):
+            server_maxPlayers = request.args.get('serverMaxPlayers')
         #On ajoute le serveur dans la liste des serveurs si le fichier n'existe pas on le crée
         if not os.path.isfile('servers.json'):
             with open('servers.json', 'w') as f:
@@ -114,7 +114,8 @@ def new_server():
             'ramMin': server_ram_min,
             'ramMax': server_ram_max,
             'port': server_port,
-            'dir': server_path
+            'dir': server_path,
+            'maxPlayers': server_maxPlayers
         }
 
         # Chemin du dossier du serveur
@@ -183,7 +184,7 @@ def new_server():
         return redirect('/server?name=' + server_name)
     return render_template('new-server.html')
 
-@app.route('/servers-info') # infos sur un serveur
+@app.route('/server-info') # infos sur un serveur
 @login_required
 def servers_info():
     server_name = request.args.get('name')
@@ -305,7 +306,23 @@ def server_info():
 @app.route('/servers-data')
 @login_required
 def servers_data():
-    return send_file('servers.json')
+    with open('servers.json', 'r') as f:
+        servers = json.load(f)
+    for server in servers:
+        server_dir = servers[server]['dir']
+        server_port = servers[server]['port']
+        servers[server]['status'] = 'inactive'
+        
+        for process in psutil.process_iter():
+            if process.name() == 'java' and server_dir in process.cmdline():
+                servers[server]['status'] = 'active'
+                break
+        try:
+            servers[server]['players'] = len(mcstatus.MinecraftServer('localhost', int(server_port)).status().players.sample)
+        except Exception as e:
+            servers[server]['players'] = 0
+
+        return jsonify(servers)
 
 @app.route('/server')
 @login_required

@@ -220,7 +220,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const name = urlParams.get('name');
         function updateServerInfo() {
-            fetch('/servers-info?name=' + name)
+            fetch('/server-info?name=' + name)
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);

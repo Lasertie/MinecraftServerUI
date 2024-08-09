@@ -1,1 +1,29 @@
-{"test": {"type": "forge", "version": "1.16.5", "ramMin": "1G", "ramMax": "2G", "port": "25565", "dir": "test"}, "machin": {"type": "forge", "version": "1.17.1", "ramMin": "1G", "ramMax": "2G", "port": "25565", "dir": "Machin"}, "tesst": {"type": "vanilla", "version": "1.16.5", "ramMin": "1G", "ramMax": "2G", "port": "25565", "dir": "tesst"}}
+{
+    "test": {
+        "type": "forge",
+        "version": "1.16.5",
+        "ramMin": "1G",
+        "ramMax": "2G",
+        "port": "25565",
+        "dir": "test",
+        "maxPlayers": "20"
+    },
+    "machin": {
+        "type": "forge",
+        "version": "1.17.1",
+        "ramMin": "1G",
+        "ramMax": "2G",
+        "port": "25565",
+        "dir": "Machin",
+        "maxPlayers": "20"
+    },
+    "tesst": {
+        "type": "vanilla",
+        "version": "1.16.5",
+        "ramMin": "1G",
+        "ramMax": "2G",
+        "port": "25565",
+        "dir": "tesst",
+        "maxPlayers": "20"
+    }
+}
