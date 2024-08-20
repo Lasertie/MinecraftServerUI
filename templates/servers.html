@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 
 <head>
     <meta charset="UTF-8">
@@ -65,15 +65,23 @@
 
 <body>
     <header>
-        <h1>Gestion Serveur Minecraft</h1>
+        <h1 lang="fr">MineServeurGUI</h1>
+        <h1 lang="en">MineServerGUI</h1>
     </header>
     <nav>
         <ul>
-            <li></li>
-            <li><a href="/"><svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 56 56">
+            <li>
+            </li>
+            <li id="current">
+                <a href="/">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 56 56">
                         <path fill="currentColor"
                             d="m50.923 21.002l.046.131l.171.566l.143.508l.061.232l.1.42a23.933 23.933 0 0 1-2.653 17.167a23.932 23.932 0 0 1-13.57 10.89l-.404.12l-.496.128l-.717.17a1.89 1.89 0 0 1-2.288-1.558a2.127 2.127 0 0 1 1.606-2.389l.577-.145c.36-.094.67-.186.929-.273a19.933 19.933 0 0 0 10.899-8.943a19.934 19.934 0 0 0 2.292-13.923l-.069-.313l-.092-.365l-.115-.418l-.138-.47a2.135 2.135 0 0 1 1.26-2.602a1.894 1.894 0 0 1 2.458 1.067M7.385 19.92a2.127 2.127 0 0 1 1.394 2.63c-.18.606-.31 1.11-.39 1.513a19.933 19.933 0 0 0 2.295 13.91a19.934 19.934 0 0 0 10.911 8.947l.306.097l.174.05l.39.106l.694.171a2.135 2.135 0 0 1 1.623 2.393a1.894 1.894 0 0 1-2.152 1.594l-.138-.025l-.576-.135l-.51-.13l-.446-.125l-.2-.06A23.933 23.933 0 0 1 7.22 39.972a23.932 23.932 0 0 1-2.647-17.197l.077-.32l.1-.375l.194-.665l.076-.25a1.89 1.89 0 0 1 2.365-1.246M28.051 12c8.837 0 16 7.163 16 16s-7.163 16-16 16c-8.836 0-16-7.163-16-16s7.164-16 16-16m0 4c-6.627 0-12 5.373-12 12s5.373 12 12 12c6.628 0 12-5.373 12-12s-5.372-12-12-12m0-12a23.932 23.932 0 0 1 16.217 6.306l.239.227l.275.274l.31.322l.346.369a1.89 1.89 0 0 1-.205 2.76a2.127 2.127 0 0 1-2.873-.196c-.217-.23-.419-.435-.605-.617l-.35-.334l-.16-.143A19.933 19.933 0 0 0 28.051 8a19.934 19.934 0 0 0-13.204 4.976l-.114.102l-.253.24l-.287.285l-.495.515c-.76.809-2.014.9-2.883.21a1.894 1.894 0 0 1-.305-2.662l.09-.106l.405-.431l.368-.378c.175-.175.336-.33.484-.465A23.933 23.933 0 0 1 28.05 4" />
-                    </svg>Tableau de Bord</a></li>
+                    </svg>
+                    <span lang="fr">Tableau de Bord</span>
+                    <span lang="en">Dashboard</span>
+                </a>
+            </li>
             <li><a href="/servers"><svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24">
                         <path fill="currentColor"
                             d="M20.5 8.5v-3a1 1 0 0 0-1-1h-15a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h15a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1a1 1 0 0 0 1-1Zm-1 10h-15v-3h15Zm0-5h-15v-3h15Zm0-5h-15v-3h15Z" />
@@ -83,7 +91,11 @@
                         <circle cx="8.75" cy="12" r=".75" fill="currentColor" />
                         <circle cx="6.25" cy="17" r=".75" fill="currentColor" />
                         <circle cx="8.75" cy="17" r=".75" fill="currentColor" />
-                    </svg>Serveurs</a></li>
+                    </svg>
+                    <span lang="fr">Serveurs</span>
+                    <span lang="en">Servers</span>
+                </a>
+            </li>
             <li><a href="/new-server"><svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"
                         viewBox="0 0 21 21">
                         <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round"
@@ -92,16 +104,24 @@
                             <path
                                 d="M17.5 3.467a1.462 1.462 0 0 1-.017 2.05L10.5 12.5l-3 1l1-3l6.987-7.046a1.409 1.409 0 0 1 1.885-.104zm-2 2.033l.953 1" />
                         </g>
-                    </svg>Créer un serveur</a></li>
+                    </svg>
+                    <span lang="fr">Créer un serveur</span>
+                    <span lang="en">Create a server</span>
+                </a>
+            </li>
             <li><a href="/settings">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path fill="currentColor"
                             d="m21.51 14.59l-1.25-1.32a7.878 7.878 0 0 0-.06-2.9l1.22-1.32a.76.76 0 0 0 .14-.79a10.257 10.257 0 0 0-2.2-3.35a.74.74 0 0 0-.72-.19l-1.84.47a8.48 8.48 0 0 0-1.83-1l-.45-1.72a.73.73 0 0 0-.59-.55a9.92 9.92 0 0 0-1.89-.17a9.36 9.36 0 0 0-2.35.31a.73.73 0 0 0-.53.53l-.48 1.77a8.23 8.23 0 0 0-1.52.88l-1.82-.45a.73.73 0 0 0-.72.21a10 10 0 0 0-2.23 3.62a.76.76 0 0 0 .16.77l1.26 1.31a8.85 8.85 0 0 0-.1 1.27c0 .3 0 .6.05.9l-1.31 1.46a.75.75 0 0 0-.16.73a10 10 0 0 0 2 3.59a.75.75 0 0 0 .76.24l1.72-.44a7.918 7.918 0 0 0 2 1.23l.5 1.79a.77.77 0 0 0 .56.53c.721.163 1.459.247 2.2.25c.59-.006 1.178-.063 1.76-.17a.75.75 0 0 0 .59-.53l.47-1.69a8.109 8.109 0 0 0 2.38-1.34l1.76.4a.74.74 0 0 0 .73-.24a10.118 10.118 0 0 0 2-3.34a.76.76 0 0 0-.21-.75m-9.39 1.27a3.81 3.81 0 1 1-.021-7.619a3.81 3.81 0 0 1 .02 7.62" />
-                    </svg>Paramètres</a></li>
+                    </svg>
+                    <span lang="fr">Paramètres</span>
+                    <span lang="en">Settings</span>
+                </a>
+            </li>
             <li><label class="switch">
-                <input type="checkbox" id="lumos">
-                <span class="slider"></span>
-            </label></li>
+                    <input type="checkbox" id="lumos">
+                    <span class="slider"></span>
+                </label></li>
         </ul>
     </nav>
     <main>
@@ -136,15 +156,25 @@
                         const li = document.createElement('li');
                         li.innerHTML = `
                             <h2>${serverName}</h2>
-                            <p>Statut: ${server.status}</p>
-                            <p>Joueurs: ${server.players}/${server.maxPlayers}</p>
-                            <a href="/server?name=${serverName}">Gérer</a>
+                            <p lang="fr">Statut: ${server.status}</p>
+                            <p lang="en">Status: ${server.status}</p>
+                            <p lang="fr">Joueurs: ${server.players}/${server.maxPlayers}</p>
+                            <p lang="en">Players: ${server.players}/${server.maxPlayers}</p>
+                            <a href="/server?name=${serverName}" lang="fr">Gérer</a>
+                            <a href="/server?name=${serverName}" lang="en">Manage</a>
                         `;
                         serversList.appendChild(li);
                     }
                 });
-        </script><script src="js/script.js"></script>
+        </script>
+        <footer>
+            <select name="langSelect" id="langSelect">
+                <option value="fr">Français</option>
+                <option value="en">English</option>
+            </select>
+        </footer>
     </main>
+    <script src="js/script.js"></script>
 </body>
 
 </html>

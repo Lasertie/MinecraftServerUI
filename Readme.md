@@ -13,6 +13,7 @@
 # MineServGUI
 A simple GUI for managing a Minecraft server.
 ## Features
+- Darkmode
 - Start, stop, and restart the server
 - Create server
 - Create server with plugins (spigot)
@@ -23,15 +24,16 @@ A simple GUI for managing a Minecraft server.
 - Eula auto-accept
 - Physical server status
 - Server status
+- French // english translation
+- Server deletion
 
 ## Comming soon
 - Server backups
-- Server logs
+- Server logs [In progress]
 - Server console
-- Server deletion
 - Better UI (maybe)
 - Update of 'versions.json' (the file that contains all the versions of the server)
-- More server types (like paper, bukkit, etc.)
+- More server types (like paper, bukkit, etc.) (update of 'versions.json')
 - Update of 'commands.json' (the file that contains all the commands for each versions)
 
 ## Installation
@@ -39,7 +41,8 @@ A simple GUI for managing a Minecraft server.
 2. Extract the zip file
 3. Run the python file [install.py](install.py)
 5. Open a web browser and go to `localhost:'port'` (port is the port in [config.conf](config.conf))
-6. Enjoy!
+6. Enter the user//password you set in the installation
+7. Enjoy !
 
 ## Screenshots
 ### Server creation

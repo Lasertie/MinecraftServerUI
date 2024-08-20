@@ -180,3 +180,8 @@ select option:checked:focus {
 select option:checked:active {
     background-color: #f4f4f4;
 }
+
+nav ul li {
+    display: flex;
+    align-items: center;
+}

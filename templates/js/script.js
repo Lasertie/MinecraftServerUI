@@ -15,3 +15,54 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('lumos', lumos);
     });
 });
+
+function changeLang(language) {
+    if (language === 'fr') {
+        // touts les elements de la page avec lang autre que fr sont cachés
+        document.querySelectorAll('[lang]').forEach(element => {
+            if (element.getAttribute('lang') !== 'fr') {
+                element.style.display = 'none';
+            } else {
+                element.style.display = 'block';
+            }
+        });
+    } else if (language === 'en') {
+        // touts les elements de la page avec lang autre que en sont cachés
+        document.querySelectorAll('[lang]').forEach(element => {
+            if (element.getAttribute('lang') !== 'en') {
+                element.style.display = 'none';
+            } else {
+                element.style.display = 'block';
+            }
+        });
+    }
+
+const lang = document.getElementById('langSelect');
+lang.addEventListener('change', () => {
+    let langValue = lang.value;
+    localStorage.setItem('lang', langValue);
+    changeLang(langValue);
+});}
+
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        lang = localStorage.getItem('lang');
+    } catch (e) {
+        lang = null;
+    }
+    if (lang !== null) {
+        document.getElementById('langSelect').value = lang;
+        changeLang(lang);
+        setTimeout(() => {
+            changeLang(lang)
+        }, 4000);
+    } 
+    if (lang === null) {
+        // Par défaut, on affiche le français
+        localStorage.setItem('lang', 'fr');
+        changeLang('fr');
+        setTimeout(() => {
+            changeLang('fr')
+        }, 4000);
+    }
+});

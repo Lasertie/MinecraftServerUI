@@ -53,19 +53,21 @@ def start():
     print("Voulez-vous mettre a jour les fichiers depuis le repo github ? (o/n)")
     choix = input()
     if choix == "o":
-        subprocess.run(["python3", "maj.py"])
+        os.system('python3 maj.py')
 
     # demarrer le serveur
     print("Demarrage du serveur")
-    subprocess.run(["python3", "app.py"])
+    os.system('flask run')
 
     # demander si l'utilisateur veut demarrer le serveur au demarrage de l'ordinateur
-    print("Voulez-vous demarrer le serveur au demarrage de l'ordinateur ? (O/n)")
-    choix = input()
-    if choix == "O" or choix == "o":
+    print("Voulez-vous demarrer le serveur au demarrage de l'ordinateur ? [O(Oui)/n(Non)]")
+    print("Would you like to start the server when the computer start ? [O(Yes)/n(No)]")
+    choixdeux = input()
+    if choixdeux == "O" or choixdeux == "o":
         setup_autostart()
     else:
         print("Le serveur ne demarrera pas au demarrage de l'ordinateur")
+        print("Ok nothing append when the computer start...")
 
 if __name__ == "__main__":
     start()

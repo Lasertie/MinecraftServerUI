@@ -21,6 +21,86 @@
             "install": "java -jar install.jar --installServer",
             "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
             "stop": "stop"
+        },
+        "1.18": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        },
+        "1.18.1": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        },
+        "1.18.2": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        },
+        "1.19": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        },
+        "1.19.1": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        },
+        "1.19.2": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        },
+        "1.19.3": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        },
+        "1.19.4": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        },
+        "1.20": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        },
+        "1.20.1": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        },
+        "1.20.2": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        },
+        "1.20.3": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        },
+        "1.20.4": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        },
+        "1.20.6": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        },
+        "1.21": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
+        },
+        "1.21.1": {
+            "install": "java -jar install.jar --installServer",
+            "start": "java -Xmx1024M -Xms1024M -jar server.jar nogui",
+            "stop": "stop"
         }
     }
 }

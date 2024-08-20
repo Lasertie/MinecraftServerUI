@@ -1,65 +1,90 @@
-from flask import Flask, render_template, jsonify, request, redirect, url_for, flash, session, abort, send_file, send_from_directory
+### Je suis lla ohoihbljk
+from flask import Flask, render_template, jsonify, request, redirect, url_for, flash, session, abort, send_file, send_from_directory, Response
 import psutil
 import json
 import os
+import time
 import subprocess
 import requests
 import mcstatus
 from mcrcon import MCRcon
 import glob
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_httpauth import HTTPBasicAuth
+from wsgidav.wsgidav_app import WsgiDAVApp
+from wsgidav.fs_dav_provider import FilesystemProvider
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
+from werkzeug.serving import run_simple
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_sqlalchemy import SQLAlchemy
+from functools import wraps
+from werkzeug.wrappers import Request, Response
 
 app = Flask(__name__)
+auth = HTTPBasicAuth()
 # clé generée aléatoirement a chaque fois que le serveur est lancé
 app.secret_key = 'os.urandom(24)'
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
 
-class User(UserMixin):
-    def __init__(self, id, username, password):
-        self.id = id
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+    role = db.Column(db.String(150), nullable=False)
+
+    def __init__(self, username, password, role):
         self.username = username
-        self.password = password
-
-users = {
-    'user1': User('1', 'user1', 'password1'), # a remplacer par une base de données
-    'user2': User('2', 'user2', 'password2') # to replace with a database
-}
+        self.password = generate_password_hash(password)
+        self.role = role
 
 @login_manager.user_loader
 def load_user(user_id):
-    for user in users.values():
-        if user.id == user_id:
-            return user
-    return None
+    return User.query.get(int(user_id))
+
+def role_required(role):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not current_user.is_authenticated or current_user.role != role:
+                return abort(403)
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        user = users.get(username)
-        if user and user.password == password:
+        user = User.query.filter_by(username=username).first()
+        if user and check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for('home'))
         else:
             flash('Invalid username or password')
+            app.logger.warning(f'Failed login attempt for {username}')
     return render_template('login.html')
+
+#@login_required
+login_manager.unauthorized = lambda: redirect(url_for('login'))
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(url_for('login'))
 
 @app.route('/favicon.ico') # retour de l'icone
 def favicon():
     return send_file('favicon.ico')
 
 @app.route('/css/style.css') # retour du fichiers css
-@login_required
 def send_css():
     return send_file('templates/css/style.css')
 
@@ -100,6 +125,12 @@ def new_server():
             server_seed = ''
         if request.args.get('serverMaxPlayers'):
             server_maxPlayers = request.args.get('serverMaxPlayers')
+        else:
+            server_maxPlayers = '20'
+
+        # Chemin du dossier du serveur
+        server_path = f'servers/{server_name}'
+
         #On ajoute le serveur dans la liste des serveurs si le fichier n'existe pas on le crée
         if not os.path.isfile('servers.json'):
             with open('servers.json', 'w') as f:
@@ -118,8 +149,6 @@ def new_server():
             'maxPlayers': server_maxPlayers
         }
 
-        # Chemin du dossier du serveur
-        server_path = f'servers/{server_name}'
         # on crée le dossier du serveur
         os.system(f'mkdir "{server_path}"')
         os.system(f'cd {server_path}')
@@ -157,7 +186,7 @@ def new_server():
             commands = json.load(f)
         
         # on utilise la librairie subprocess pour lancer le serveur avec la commande trouvé dans le fichier commands.json selon le type de serveur
-        command = commands[server_type][server_version]['install'] # ex pour forge: java -jar server.jar --installServer
+        command = commands[server_type][server_version]['install'] # ex: java -jar install.jar --installServer
         result = subprocess.run(command, cwd=server_path, capture_output=True)
         print(result.stdout)
         print(result.stderr)
@@ -218,6 +247,25 @@ def servers_info():
     print('Server not found')
     return jsonify({'name': 'Server not found'})
 
+def tail(file):
+    with open(file) as f:
+        f.seek(0, 2)
+        while True:
+            line = f.readline()
+            if not line:
+                time.sleep(0.1)
+                continue
+            yield f"data:{line}\n\n"
+    
+@app.route('/server-log_stream')
+@login_required
+def server_log(): # retourne un flux
+    server_name = request.args.get("name")
+    with open('servers.json') as j:
+        servers = json.load(j)
+    log_dir = servers[server_name]['log']
+    return Response(tail(log_dir))
+
 @app.route('/servers-ctrl') # controle d'un serveur
 @login_required
 def servers_ctrl():
@@ -270,6 +318,19 @@ def servers_ctrl():
     print('Server not found')
     return jsonify({'status': 'error'})
 
+app.route('/server-properties')
+@login_required
+def server_properties():
+    server_name = request.args.get('name')
+    with open('servers.json', 'r') as f:
+        servers = json.load(f)
+    if server_name in servers:
+        server = servers[server_name]
+        server_dir = server['dir']
+        with open(f'{server_dir}/server.properties', 'r') as f:
+            properties = f.read()
+        return jsonify(properties)
+
 @app.route('/server-versions') # retour des versions des serveurs
 @login_required
 def server_versions():
@@ -291,7 +352,7 @@ def server_versions():
         response = ['error']
     return jsonify(response)
 
-@app.route('/server-info') # retour json de l'utilisation du disque dur, de la ram, du processeur, et de la bande passante
+@app.route('/main-serverinfo') # retour json de l'utilisation du disque dur, de la ram, du processeur, et de la bande passante
 @login_required
 def server_info():
     data = {
@@ -318,11 +379,12 @@ def servers_data():
                 servers[server]['status'] = 'active'
                 break
         try:
+            mc_server = mcstatus.MinecraftServer('localhost', int(server_port)).status()
+            status = mc_server.status()
             servers[server]['players'] = len(mcstatus.MinecraftServer('localhost', int(server_port)).status().players.sample)
         except Exception as e:
             servers[server]['players'] = 0
-
-        return jsonify(servers)
+    return jsonify(servers)
 
 @app.route('/server')
 @login_required
@@ -336,32 +398,114 @@ def servers():
 
 @app.route('/settings')
 @login_required
+@role_required('root')
 def settings():
     return render_template('settings.html')
 
 @app.route('/settings-ctl')
 @login_required
+@role_required('root')
 def settings_ctrl():
     action = request.args.get('action')
     if action == 'get':
         with open('settings.json', 'r') as f:
             settings = json.load(f)
         return jsonify(settings)
+    elif action == 'add':
+        with open('settings.json', 'r') as f:
+            settings = json.load(f)
+        settings.update(request.args)
+        with open('settings.json', 'w') as f:
+            json.dump(settings, f)
+        return jsonify({'status': 'ok'})
     elif not action:
         with open('settings.json', 'w') as f:
             json.dump(request.args, f)
         return jsonify({'status': 'ok'})
     return jsonify({'status': 'error'})
 
+@app.route('/users')
+@login_required
+@role_required('root')
+def usersServe():
+    return render_template('users.html')
+
+@app.route('/users-ctl')
+@login_required
+@role_required('root')
+def users_ctl():
+    username = request.args.get('username')
+    action = request.args.get('action')
+    if action == 'get':
+        users = {}
+        for user in User.query.all():
+            users[user.username] = {
+                'role': user.role
+            }
+        return jsonify(users)
+    elif action == 'add':
+        password = request.args.get('password')
+        role = request.args.get('role')
+        user = User(username, password, role)
+        db.session.add(user)
+        db.session.commit()
+        return jsonify({'status': 'ok'})
+    elif action == 'delete':
+        user = User.query.filter_by(username=username).first()
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({'status': 'ok'})
+    elif action == 'modify':
+        if request.args.get('role'):
+            user = User.query.filter_by(username=username).first()
+            user.role = request.args.get('role')
+            db.session.commit()
+            return jsonify({'status': 'ok'})
+        # password avec post
+        if request.args.get('password'): # to change to post for security
+            user = User.query.filter_by(username=username).first()
+            user.password = generate_password_hash(request.args.get('password'))
+            db.session.commit()
+            return jsonify({'status': 'ok'})
+    return jsonify({'status': 'error'})
+
 @app.errorhandler(404)
+@login_required
 def page_not_found(error):
     return render_template('404.html'), 404
 
 @app.errorhandler(500)
+@login_required
 def internal_server_error(error):
     return render_template('500.html'), 500
 
+###### WebDav ######
+with app.app_context():
+    dav_provider =  FilesystemProvider(os.path.abspath(os.path.dirname(__file__)))
+    UsersEligibled = User.query.filter_by(role='root').all()
+    dav_app = WsgiDAVApp({
+        "provider_mapping": {"/": dav_provider},
+        "simple_dc": {
+            "user_mapping": {
+        }
+        "http_authenticator": {
+            "domain_controller": None,
+            "accept_basic": True,
+            "accept_digest": False,
+            "default_to_digest": False
+        },
+        "verbose": 1
+    })
 
+app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {
+    '/webdav': dav_app
+})
+
+# Securise acces to webdav with login
+# @app.route('/webdav')
+# @login_required
+# def webdav():
+#     return redirect('/webdav/')
 
 '''
 @app.route('/test') # test the code
@@ -377,5 +521,29 @@ def codeTester():
         os.rename(old_name, new_name)
         print(f"Renamed {old_name} to {new_name}")
 '''
+
+# with app.app_context():
+#     for rule in app.url_map.iter_rules():
+#         print(f" route : {rule.endpoint}, URL :{rule}")
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    run_simple('0.0.0.0', 5000, app, use_reloader=True, use_debugger=True, use_evalex=True)
+    # #demarrer le serveur flask
+    # flask_server = WSGIServer(bind_addr=('0.0.0.0', 5000), wsgi_app=app)
+    # flask_server.prepare()
+
+    # #demarrer le serveur webdav
+    # dav_server = WSGIServer(bind_addr=('0.0.0.0', 8080), wsgi_app=dav_app)
+    # dav_server.prepare()
+
+    # try:
+    #     flask_server.start()
+    #     dav_server.start()
+    # except KeyboardInterrupt:
+    #     flask_server.stop()
+    #     dav_server.stop()
+    #     print('Server stopped')
+    #     exit(0)
+    # except Exception as e:
+    #     print(e)
+    #     exit(1)
