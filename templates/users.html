@@ -75,6 +75,86 @@
             color: #fff;
             cursor: pointer;
         }
+
+        button:hover {
+            background-color: #ff6600;
+        }
+
+        .users-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            width: 50%;
+        }
+
+        .user {
+            display: grid;
+            gap: 0.5rem;
+            grid-template-columns: 1fr 1fr 1fr;
+            width: 100%;
+            box-shadow: 0 0 10px black;
+            border-radius: 5px;
+            background-color: #fff;
+            padding: 1rem;
+            color: black;
+            margin-top: 1rem;
+            box-sizing: content-box;
+        }
+
+        .user p {
+            padding: 0.5rem;
+            border-radius: 5px;
+        }
+
+        .user button {
+            padding: 0 !important;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #ff9900;
+            color: #fff;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        /* Styles pour la modale */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 2rem;
+            padding-top: 0;
+            padding-right: 0;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            color: black;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -151,30 +231,110 @@
         </ul>
     </nav>
     <main>
+        <!-- Bouton pour ouvrir la modale -->
+        <button id="editUserBtn">Éditer l'utilisateur</button>
+
+        <!-- La modale -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Éditer l'utilisateur</h2>
+                <form id="editUserForm">
+                    <label for="username" lang="fr">Nom d'utilisateur:</label>
+                    <label for="username" lang="en">Username:</label>
+                    <input type="text" id="username" name="username" value=""><br><br>
+                    <select name="role" id="role">
+                        <option value="role">Root</option>
+                        <option value="user">User</option>
+                    </select>
+
+                    <button type="submit">Sauvegarder</button>
+                </form>
+            </div>
+        </div>
+
+        <script>
+        </script>
         <div class="users-list">
             <h2 lang="fr">Utilisateurs</h2>
             <h2 lang="en">Users</h2>
             <div id="users">
-
             </div>
             <script>
+                var currentUserEdit = ''
                 const usersContent = document.getElementById('users');
+                var modal = document.getElementById("editModal");
                 fetch('/users-ctl?action=get')
                     .then(response => response.json())
                     .then(data => {
-                        for (const key in data) {
-                            const usersContent = document.createElement('div');
-                            usersContent.innerHTML = `
-                                <label for="${key}">${key}</label>
-                                <input type="text" id="${key}" name="${key}" value="${data[key]}">
-                            `;
-                            settings.appendChild(setting);
+                        // memo:
+                        // data = {
+                        //     "{username}": {
+                        //         "role": "{role}"
+                        //     }
+                        for (const user in data) {
+                            const userDiv = document.createElement('div');
+                            userDiv.classList.add('user');
+                            /*const usernameLabelfr = document.createElement('p');
+                            usernameLabelfr.textContent = 'Nom d\'utilisateur';
+                            usernameLabelfr.lang = 'fr';
+                            userDiv.appendChild(usernameLabelfr);
+                            const usernameLabelen = document.createElement('p');
+                            usernameLabelen.textContent = 'Username';
+                            usernameLabelen.lang = 'en';
+                            userDiv.appendChild(usernameLabelen);*/
+                            const username = document.createElement('p');
+                            username.textContent = user;
+                            userDiv.appendChild(username);
+                            const role = document.createElement('p');
+                            role.textContent = data[user].role;
+                            userDiv.appendChild(role);
+                            const editButton = document.createElement('button');
+                            editButton.textContent = 'Edit'
+                            editButton.classList.add('editBtn')
+                            editButton.onclick = function () {
+                                modal.style.display = "block";
+                                const usernameInput = document.getElementById("username")
+                                const roleInput = document.getElementById("role")
+                                usernameInput.value = user
+                                // roleInput.
+                            }
+                            userDiv.appendChild(editButton);
+                            usersContent.appendChild(userDiv);
                         }
-                        const submit = document.createElement('button');
+                        /*const submit = document.createElement('button');
                         submit.type = 'submit';
                         submit.textContent = 'Enregistrer';
-                        settings.appendChild(submit);
+                        usersContent.appendChild(submit);*/
                     });
+
+                // JS pour gérer la modale
+                var btn = document.getElementsByClassName("editBtn");
+                var span = document.getElementsByClassName("close")[0];
+
+                // Ferme la modale quand on clique sur le X
+                span.onclick = function () {
+                    modal.style.display = "none";
+                }
+
+                // Ferme la modale quand on clique en dehors de la modale
+                window.onclick = function (event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                    }
+                }
+
+                // Gestion du formulaire
+                document.getElementById("editUserForm").onsubmit = function (e) {
+                    e.preventDefault();
+                    const username = document.getElementById("username").value;
+
+                    // Ici, tu peux ajouter le code pour envoyer les données au serveur via AJAX, Fetch, etc.
+                    console.log("Nom d'utilisateur:", username);
+
+                    // Ferme la modale après soumission
+                    modal.style.display = "none";
+                }
             </script>
         </div>
     </main>

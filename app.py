@@ -31,6 +31,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -481,19 +482,25 @@ def internal_server_error(error):
 
 ###### WebDav ######
 with app.app_context():
-    dav_provider =  FilesystemProvider(os.path.abspath(os.path.dirname(__file__)))
+    dav_provider =  FilesystemProvider(os.path.abspath(os.path.dirname(__file__)), readonly=False)
     UsersEligibled = User.query.filter_by(role='root').all()
+    # user_mapping = {user.username: user.password for user in UsersEligibled}
+    # print(user_mapping)
+    # if not user_mapping:
+    #     user_mapping = {"root": "root"}  # Utilisateur par défaut si aucun utilisateur n'est trouvé
+
     dav_app = WsgiDAVApp({
         "provider_mapping": {"/": dav_provider},
         "simple_dc": {
-            "user_mapping": {
-        }
+            "user_mapping": {"*": True} #user_mapping,
+        },
         "http_authenticator": {
             "domain_controller": None,
             "accept_basic": True,
             "accept_digest": False,
             "default_to_digest": False
         },
+        "dir_browser": {"enable": True},
         "verbose": 1
     })
 
@@ -501,11 +508,10 @@ app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {
     '/webdav': dav_app
 })
 
-# Securise acces to webdav with login
-# @app.route('/webdav')
-# @login_required
-# def webdav():
-#     return redirect('/webdav/')
+@app.route('/webdav')
+@login_required
+def webdav():
+    return redirect('/webdav/')
 
 '''
 @app.route('/test') # test the code

@@ -26,6 +26,7 @@ A simple GUI for managing a Minecraft server.
 - Server status
 - French // english translation
 - Server deletion
+- Remote file access (in progress)
 
 ## Comming soon
 - Server backups
