@@ -243,21 +243,20 @@
             <p lang="en">The following actions are irreversible:</p>
             <ul>
                 <li>
-                    <p class="firstAddvert" lang="fr">Attention: cette action est irréversible</p>
-                    <p class="firstAddvert" lang="en">Warning: this action is irreversible</p>
-                    <p class="secondAddvert" lang="fr">Voullez vous vraiment le supprimer ?</p>
-                    <p class="secondAddvert" lang="en">Do you really want to delete it ?</p>
-                    <p class="3Addvert" lang="fr">Je suis chiant hein ?</p>
-                    <p class="3Addvert" style="display: none;" lang="en">I'm annoying right ?</p>
+                    <p id="firstAddvert" style="display: none;" lang="fr">Attention: cette action est irréversible</p>
+                    <p id="firstAddvert" style="display: none;" lang="en">Warning: this action is irreversible</p>
+                    <p id="secondAddvert" style="display: none;" lang="fr">Voullez vous vraiment le supprimer ?</p>
+                    <p id="secondAddvert" style="display: none;" lang="en">Do you really want to delete it ?</p>
+                    <p id="3Addvert" style="display: none;" lang="fr">Je suis chiant hein ?</p>
+                    <p id="3Addvert" style="display: none;" lang="en">I'm annoying right ?</p>
                     <input type="submit" id="delete" value="Supprimer le serveur" lang="fr">
                     <input type="submit" id="delete" value="Delete the server" lang="en">
-                    <input type="submit" name="Oui" value="Oui" class="OuiTuEs" style="display: none;" lang="fr">
-                    <input type="submit" name="Oui" value="Yes" class="OuiTuEs" style="display: none;" lang="en">
+                    <input type="submit" name="Oui" value="Oui" id="OuiTuEs" style="display: none;" lang="fr">
+                    <input type="submit" name="Oui" value="Yes" id="OuiTuEs" style="display: none;" lang="en">
                 </li>
             </ul>
         </div>
     </div>
-    <script src="js/script.js"></script>
     <script>
         // recuperer le nom du serveur dans l'url (name)
         const urlParams = new URLSearchParams(window.location.search);
@@ -307,20 +306,13 @@
                     clearInterval
                 });
         });
-        document.addEventListener('DOMContentLoaded', () => {
-            updateServerInfo();
-        });
         const del = document.getElementById('delete')
-        const firstAddvert = document.getElementsByClassName('firstAddvert');
-        const secondAddvert = document.getElementsByClassName('secondAddvert');
-        const thirdAddvert = document.getElementsByClassName('3Addvert');
-        const OuiTuEs = document.getElementsByClassName('OuiTuEs');
-        secondAddvert.style.display = 'none';
-        firstAddvert.style.display = 'none';
-        thirdAddvert.style.display = 'none';
-        OuiTuEs.style.display = 'none';
         del.addEventListener('click', () => {
             // verifier si l'utilisateur est sur de vouloir supprimer le serveur
+            const firstAddvert = document.getElementById('firstAddvert');
+            const secondAddvert = document.getElementById('secondAddvert');
+            const thirdAddvert = document.getElementById('3Addvert');
+            const OuiTuEs = document.getElementById('OuiTuEs');
             firstAddvert.style.display = 'block';
             // si l'utilisateur clique une deuxieme fois
             del.addEventListener('click', () => {
@@ -343,7 +335,13 @@
                 });
             });
         });
+        document.addEventListener('DOMContentLoaded', () => {
+            updateServerInfo();
+        });
+
+        // Changement de langue
     </script>
+    <script src="js/script.js"></script>
     <footer>
         <select name="langSelect" id="langSelect">
             <option value="fr">Français</option>
