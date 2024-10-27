@@ -1,6 +1,13 @@
 flask
 mcrcon
 psutil
-glob
+glob2
 mcstatus
 gunicorn
+requests
+flask_login
+flask_httpauth
+flask_sqlalchemy
+wsgidav
+pyfunctools
+werkzeug

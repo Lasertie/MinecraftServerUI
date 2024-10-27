@@ -22,8 +22,6 @@ function changeLang(language) {
         document.querySelectorAll('[lang]').forEach(element => {
             if (element.getAttribute('lang') !== 'fr') {
                 element.style.display = 'none';
-            } else {
-                element.style.display = 'block';
             }
         });
     } else if (language === 'en') {
@@ -31,8 +29,6 @@ function changeLang(language) {
         document.querySelectorAll('[lang]').forEach(element => {
             if (element.getAttribute('lang') !== 'en') {
                 element.style.display = 'none';
-            } else {
-                element.style.display = 'block';
             }
         });
     }

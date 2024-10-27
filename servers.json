@@ -35,5 +35,15 @@
         "dir": "servers/Exemple",
         "maxPlayers": "20",
         "log": ""
+    },
+    "khk": {
+        "type": "forge",
+        "version": "1.21.1",
+        "ramMin": "1G",
+        "ramMax": "2G",
+        "port": "25565",
+        "dir": "servers/khk",
+        "maxPlayers": "20",
+        "log": ""
     }
 }

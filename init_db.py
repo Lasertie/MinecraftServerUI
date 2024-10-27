@@ -34,6 +34,4 @@ def init_db():
         db.session.commit()
         print("Base de données initialisée avec succès et utilisateurs ajoutés.")
 
-if __name__ == "__main__":
-    init_db()
-    exit(0)
+init_db()

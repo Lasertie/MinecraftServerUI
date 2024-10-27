@@ -19,7 +19,7 @@ def setup_autostart():
                 <string>com.MineGUI.app</string>
                 <key>ProgramArguments</key>
                 <array>
-                    <string>/usr/bin/python3</string>
+                    <string>{os.abspath(venv)}/bin/python3</string>
                     <string>{os.path.abspath("app.py")}</string>
                 </array>
                 <key>RunAtLoad</key>
@@ -37,7 +37,7 @@ def setup_autostart():
             Description=MineGUI
 
             [Service]
-            ExecStart=/usr/bin/python3 {os.path.abspath("app.py")}
+            ExecStart={os.abspath(venv)}/bin/python3 {os.path.abspath("app.py")}
             Restart=always
 
             [Install]
@@ -53,11 +53,11 @@ def start():
     print("Voulez-vous mettre a jour les fichiers depuis le repo github ? (o/n)")
     choix = input()
     if choix == "o":
-        os.system('python3 maj.py')
+        os.system('venv/bin/python3 maj.py')
 
     # demarrer le serveur
     print("Demarrage du serveur")
-    os.system('flask run')
+    os.system('venv/bin/flask run')
 
     # demander si l'utilisateur veut demarrer le serveur au demarrage de l'ordinateur
     print("Voulez-vous demarrer le serveur au demarrage de l'ordinateur ? [O(Oui)/n(Non)]")

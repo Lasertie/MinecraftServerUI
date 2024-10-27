@@ -186,7 +186,7 @@ def new_server():
         with open('commands.json', 'r') as f:
             commands = json.load(f)
         
-        # on utilise la librairie subprocess pour lancer le serveur avec la commande trouvé dans le fichier commands.json selon le type de serveur
+        # on utilise la librairy subprocess pour lancer le serveur avec la commande trouvé dans le fichier commands.json selon le type de serveur
         command = commands[server_type][server_version]['install'] # ex: java -jar install.jar --installServer
         result = subprocess.run(command, cwd=server_path, capture_output=True)
         print(result.stdout)
