@@ -60,10 +60,12 @@ A simple GUI for managing a Minecraft server.
 ### This project is licensed under the CC BY-NC-SA 4.0 License - see the [LICENSE](LICENSE) file for details 
 #### Ajustements of the license :
 - The license can be changed to any other license by the author of this project : Lasertie (me)
+- For all comercial usage please contact @Lasertie .
 - If the license is changed, the majors collaborators of this project will be notified and will be alredy mentioned in the license
 
 ## Credits
 - [Lasertie](https://github.com/Lasertie) - Main developer
+- [$now](https://github.com/Sensei-Snow) - Security developer
 - You ? - You can contribute to this project by making a pull request or an issue
 
 # French version
@@ -91,6 +93,7 @@ Une interface graphique simple pour gérer un serveur Minecraft.
 - Mise à jour de 'versions.json' (le fichier qui contient toutes les versions du serveur)
 - Plus de types de serveurs (comme paper, bukkit, etc.)
 - Mise à jour de 'commands.json' (le fichier qui contient toutes les commandes pour chaque version)
+- Option pour réninitialiser les paramètres quand on réinstalle
 
 ## Installation
 1. Téléchargez la dernière version depuis la [page des releases]()
@@ -109,10 +112,12 @@ Une interface graphique simple pour gérer un serveur Minecraft.
 ## License
 ### Ce projet est sous licence CC BY-NC-SA 4.0 - voir le fichier [LICENSE](LICENSE) pour plus de détails
 #### Ajustements de la licence :
-- La licence peut être changée pour n'importe quelle autre licence par l'auteur de ce projet : Lasertie (moi)
+- La licence peut être changée pour n'importe quelle autre licence par l'auteur de ce projet @Lasertie (moi)
+- Pour toute utilisation commerciale merci de contacter @Lasertie .
 - Si la licence est changée, les principaux collaborateurs de ce projet seront notifiés et seront déjà mentionnés dans la licence
 
 ## Crédits
 - [Lasertie](https://github.com/Lasertie) - Développeur principal
+- [$now](https://github.com/Sensei-Snow) - Développeur sécurité
 - Vous ? - Vous pouvez contribuer à ce projet en faisant une pull request ou un issue
 ```
