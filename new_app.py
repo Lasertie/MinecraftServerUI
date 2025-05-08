@@ -22,6 +22,7 @@ SERVERS_FILE = os.path.join(JSON_DIR, 'servers.json')
 VERSIONS_FILE = os.path.join(JSON_DIR, 'versions.json')
 COMMANDS_FILE = os.path.join(JSON_DIR, 'commands.json')
 SETTINGS_FILE = os.path.join(JSON_DIR, 'settings.json')
+USER_FILE = os.path.join(JSON_DIR, 'user.json')
 
 
 def load_json(path):
@@ -29,7 +30,6 @@ def load_json(path):
         return {}
     with open(path, 'r') as f:
         return json.load(f)
-
 
 def save_json(path, data):
     with open(path, 'w') as f:
@@ -186,7 +186,7 @@ def main_serverinfo():
 
 
 @app.route('/servers-data')
-@login_required
+#@login_required
 def servers_data():
     with open('servers.json', 'r') as f:
         servers = json.load(f)
@@ -208,23 +208,23 @@ def servers_data():
     return jsonify(servers)
 
 @app.route('/server')
-@login_required
+#@login_required
 def server():
     return render_template('server.html')
 
 @app.route('/servers')
-@login_required
+#@login_required
 def servers():
     return render_template('servers.html')
 
 @app.route('/settings')
-@login_required
+#@login_required
 @role_required('root')
 def settings():
     return render_template('settings.html')
 
 @app.route('/settings-ctl')
-@login_required
+#@login_required
 @role_required('root')
 def settings_ctrl():
     action = request.args.get('action')
@@ -246,13 +246,13 @@ def settings_ctrl():
     return jsonify({'status': 'error'})
 
 @app.route('/users')
-@login_required
+#@login_required
 @role_required('root')
 def usersServe():
     return render_template('users.html')
 
 @app.route('/users-ctl')
-@login_required
+#@login_required
 @role_required('root')
 def users_ctl():
     username = request.args.get('username')
@@ -291,12 +291,12 @@ def users_ctl():
     return jsonify({'status': 'error'})
 
 @app.errorhandler(404)
-@login_required
+#@login_required
 def page_not_found(error):
     return render_template('404.html'), 404
 
 @app.errorhandler(500)
-@login_required
+#@login_required
 def internal_server_error(error):
     return render_template('500.html'), 500
 
