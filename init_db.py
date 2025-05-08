@@ -1,12 +1,12 @@
-from app import db, User, app
-from werkzeug.security import generate_password_hash
+import json
+import os
+
+USERS_FILE = "users.json"
 
 def init_db():
-    with app.app_context():
         # suppression des tables
-        db.drop_all()
-        # création des tables
-        db.create_all()
+        with open(USERS_FILE, "w") as f:
+            json.dump({"codes": []}, f, indent=4)
         
         print("Ajout de l'utilisateur admin {root}")
         print("Adding the admin user {root}")
@@ -14,8 +14,7 @@ def init_db():
         print("Please enter the password of the admin user {root}")
         password = input()
         # ajout de l'utilisateur admin
-        user = User(username="root", password=password, role="root")
-        db.session.add(user)
+        create_user_access(password, "root")
 
         print("Ajout d'un utilisateur de base (user)")
         print("Adding a basic user (user)")
@@ -33,5 +32,34 @@ def init_db():
         
         db.session.commit()
         print("Base de données initialisée avec succès et utilisateurs ajoutés.")
+
+def create_user_access(code, role):
+    data = {"codes": []}
+
+    # Charger le fichier s'il existe
+    if os.path.exists(USERS_FILE):
+        with open(USERS_FILE, "r") as f:
+            try:
+                data = json.load(f)
+            except json.JSONDecodeError:
+                print("⚠️ Fichier JSON corrompu, recréation.")
+
+    # Vérifier si le code existe déjà
+    for entry in data["codes"]:
+        if entry["code"] == code:
+            print("⚠️ Ce code existe déjà.")
+            return
+
+    # Ajouter le nouvel accès
+    data["codes"].append({
+        "code": code,
+        "role": role
+    })
+
+    with open(USERS_FILE, "w") as f:
+        json.dump(data, f, indent=4)
+
+    print(f"✅ Accès '{role}' avec code '{code}' ajouté.")
+
 
 init_db()

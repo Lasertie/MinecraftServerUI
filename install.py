@@ -5,17 +5,18 @@ import subprocess
 def install():
     # Création de l'environnement virtuel si inexistant
     if input("Créer dans un environement virtuel ? [O(Oui)/n(Non)]") == "O" :
-            if not os.path.exists("venv"):
-                print("Création de l'environnement virtuel...")
-                subprocess.run(["python", "-m", "venv", "venv"])
+        if not os.path.exists("venv"):
+            print("Création de l'environnement virtuel...")
+            subprocess.run(["python", "-m", "venv", "venv"])
+            # Chemin vers pip dans l'environnement virtuel
+            pip_path = "./venv/bin/pip"
     else:
         print("Ok, les dépendances seront installés globalement")
+        pip_path = 'pip'
 
-    # Chemin vers pip dans l'environnement virtuel
-    pip_path = "./venv/bin/pip"
     
     # Vérifier si pip existe, sinon l'installer
-    if not os.path.exists(pip_path):
+    if False: #not os.path.exists(pip_path):
         print("Installation de pip dans l'environnement virtuel...")
         # Télécharger get-pip.py
         subprocess.run(["curl", "-sS", "https://bootstrap.pypa.io/get-pip.py", "-o", "get-pip.py"])
