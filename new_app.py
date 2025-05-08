@@ -35,6 +35,23 @@ def save_json(path, data):
     with open(path, 'w') as f:
         json.dump(data, f, indent=2)
 
+@app.route('/favicon.ico') # retour de l'icone
+def favicon():
+    return send_file('favicon.ico')
+
+@app.route('/css/style.css') # retour du fichiers css
+def send_css():
+    return send_file('templates/css/style.css')
+
+@app.route('/js/script.js') # retour du fichiers js
+@login_required
+def send_js():
+    return send_file('templates/js/script.js')
+
+@app.route('/') # retour de la page d'accueil
+@login_required
+def home():
+    return render_template('index.html')
 
 # --- Server creation ---
 @app.route('/new-server')
