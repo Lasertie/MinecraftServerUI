@@ -34,6 +34,7 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 class User(UserMixin, db.Model):
+    with open("users.json")
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
