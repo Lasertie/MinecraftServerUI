@@ -7,7 +7,7 @@ def install():
     if input("Créer dans un environement virtuel ? [O(Oui)/n(Non)]") == "O" :
             if not os.path.exists("venv"):
                 print("Création de l'environnement virtuel...")
-                subprocess.run(["python3", "-m", "venv", "venv"])
+                subprocess.run(["python", "-m", "venv", "venv"])
     else:
         print("Ok, les dépendances seront installés globalement")
 
