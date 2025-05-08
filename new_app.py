@@ -184,7 +184,6 @@ def main_serverinfo():
         'bandwidth': psutil.net_io_counters().bytes_recv + psutil.net_io_counters().bytes_sent
     })
 
-
 @app.route('/servers-data')
 #@login_required
 def servers_data():
