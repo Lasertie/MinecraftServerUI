@@ -8,11 +8,12 @@ def install():
             if not os.path.exists("venv"):
                 print("Création de l'environnement virtuel...")
                 subprocess.run(["python3", "-m", "venv", "venv"])
+                # Chemin vers pip dans l'environnement virtuel
+                pip_path = "./venv/bin/pip"
     else:
         print("Ok, les dépendances seront installés globalement")
+        pip_path = 'pip'
 
-    # Chemin vers pip dans l'environnement virtuel
-    pip_path = "./venv/bin/pip"
     
     # Vérifier si pip existe, sinon l'installer
     if not os.path.exists(pip_path):
