@@ -25,16 +25,15 @@ auth = HTTPBasicAuth()
 # clé generée aléatoirement a chaque fois que le serveur est lancé
 app.secret_key = 'os.urandom(24)'
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.db'
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# db = SQLAlchemy(app)
+db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 class User(UserMixin, db.Model):
-    with open("users.json")
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
