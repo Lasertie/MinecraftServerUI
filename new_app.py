@@ -185,6 +185,121 @@ def main_serverinfo():
     })
 
 
+@app.route('/servers-data')
+@login_required
+def servers_data():
+    with open('servers.json', 'r') as f:
+        servers = json.load(f)
+    for server in servers:
+        server_dir = servers[server]['dir']
+        server_port = servers[server]['port']
+        servers[server]['status'] = 'inactive'
+        
+        for process in psutil.process_iter():
+            if process.name() == 'java' and server_dir in process.cmdline():
+                servers[server]['status'] = 'active'
+                break
+        try:
+            mc_server = mcstatus.MinecraftServer('localhost', int(server_port)).status()
+            status = mc_server.status()
+            servers[server]['players'] = len(mcstatus.MinecraftServer('localhost', int(server_port)).status().players.sample)
+        except Exception as e:
+            servers[server]['players'] = 0
+    return jsonify(servers)
+
+@app.route('/server')
+@login_required
+def server():
+    return render_template('server.html')
+
+@app.route('/servers')
+@login_required
+def servers():
+    return render_template('servers.html')
+
+@app.route('/settings')
+@login_required
+@role_required('root')
+def settings():
+    return render_template('settings.html')
+
+@app.route('/settings-ctl')
+@login_required
+@role_required('root')
+def settings_ctrl():
+    action = request.args.get('action')
+    if action == 'get':
+        with open('settings.json', 'r') as f:
+            settings = json.load(f)
+        return jsonify(settings)
+    elif action == 'add':
+        with open('settings.json', 'r') as f:
+            settings = json.load(f)
+        settings.update(request.args)
+        with open('settings.json', 'w') as f:
+            json.dump(settings, f)
+        return jsonify({'status': 'ok'})
+    elif not action:
+        with open('settings.json', 'w') as f:
+            json.dump(request.args, f)
+        return jsonify({'status': 'ok'})
+    return jsonify({'status': 'error'})
+
+@app.route('/users')
+@login_required
+@role_required('root')
+def usersServe():
+    return render_template('users.html')
+
+@app.route('/users-ctl')
+@login_required
+@role_required('root')
+def users_ctl():
+    username = request.args.get('username')
+    action = request.args.get('action')
+    if action == 'get':
+        users = {}
+        for user in User.query.all():
+            users[user.username] = {
+                'role': user.role
+            }
+        return jsonify(users)
+    elif action == 'add':
+        password = request.args.get('password')
+        role = request.args.get('role')
+        user = User(username, password, role)
+        db.session.add(user)
+        db.session.commit()
+        return jsonify({'status': 'ok'})
+    elif action == 'delete':
+        user = User.query.filter_by(username=username).first()
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({'status': 'ok'})
+    elif action == 'modify':
+        if request.args.get('role'):
+            user = User.query.filter_by(username=username).first()
+            user.role = request.args.get('role')
+            db.session.commit()
+            return jsonify({'status': 'ok'})
+        # password avec post
+        if request.args.get('password'): # to change to post for security
+            user = User.query.filter_by(username=username).first()
+            user.password = generate_password_hash(request.args.get('password'))
+            db.session.commit()
+            return jsonify({'status': 'ok'})
+    return jsonify({'status': 'error'})
+
+@app.errorhandler(404)
+@login_required
+def page_not_found(error):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+@login_required
+def internal_server_error(error):
+    return render_template('500.html'), 500
+
 # --- WebDAV setup ---
 with app.app_context():
     dav_provider = FilesystemProvider(os.getcwd(), readonly=False)
