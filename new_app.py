@@ -44,12 +44,12 @@ def send_css():
     return send_file('templates/css/style.css')
 
 @app.route('/js/script.js') # retour du fichiers js
-@login_required
+#@login_required
 def send_js():
     return send_file('templates/js/script.js')
 
 @app.route('/') # retour de la page d'accueil
-@login_required
+# @login_required
 def home():
     return render_template('index.html')
 
