@@ -5,7 +5,7 @@
     "ramMin": "1G",
     "ramMax": "2G",
     "port": "25565",
-    "dir": "servers/khk",
+    "dir": "./servers/khk",
     "maxPlayers": "20",
     "log": ""
   },
@@ -15,7 +15,7 @@
     "ramMin": "1G",
     "ramMax": "2G",
     "port": "25565",
-    "dir": "servers/test",
+    "dir": "./servers/test",
     "maxPlayers": "20"
   },
   "LLLKK": {
@@ -26,6 +26,6 @@
     "port": "25565",
     "seed": "",
     "maxPlayers": "20",
-    "dir": "servers/LLLKK"
+    "dir": "./servers/LLLKK"
   }
 }

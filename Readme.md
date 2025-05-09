@@ -59,7 +59,7 @@ A simple GUI for managing a Minecraft server.
 ## License
 ### This project is licensed under the CC BY-NC-SA 4.0 License - see the [LICENSE](LICENSE) file for details 
 #### Ajustements of the license :
-- The license can be changed to any other license by the author of this project : Lasertie (me)
+- The license can be changed to any other license by the author of this project : Lasertie
 - For all comercial usage please contact @Lasertie .
 - If the license is changed, the majors collaborators of this project will be notified and will be alredy mentioned in the license
 
@@ -112,7 +112,7 @@ Une interface graphique simple pour gérer un serveur Minecraft.
 ## License
 ### Ce projet est sous licence CC BY-NC-SA 4.0 - voir le fichier [LICENSE](LICENSE) pour plus de détails
 #### Ajustements de la licence :
-- La licence peut être changée pour n'importe quelle autre licence par l'auteur de ce projet @Lasertie (moi)
+- La licence peut être changée pour n'importe quelle autre licence par l'auteur de ce projet @Lasertie
 - Pour toute utilisation commerciale merci de contacter @Lasertie .
 - Si la licence est changée, les principaux collaborateurs de ce projet seront notifiés et seront déjà mentionnés dans la licence
 

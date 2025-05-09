@@ -201,13 +201,13 @@ def new_server():
         return redirect(f"/server?name={name}")
     return render_template('new-server.html')
 
-@app.route('/server-info')
+@app.route('/server-info') #Obtenir les infos du serveur
 @login_required
 def server_info():
     name = request.args.get('name')
     servers = load_json(SERVERS_FILE)
     if name not in servers:
-        return jsonify({'error': 'Server not found'}), 404
+        return jsonify({'error': 'Server not found'}), 404 # Renvoie 404 si le serveur n'est pas trouvé 
     cfg = servers[name]
     info = {'status': 'inactive', 'players': 0}
     for p in psutil.process_iter():
@@ -249,17 +249,17 @@ def servers_ctrl():
     if name not in servers:
         return jsonify({'error': 'Server not found'}), 404
     cfg = servers[name]
-    if action == 'start':
+    if action == 'start': # Démarrer
         subprocess.run(commands[cfg['type']][cfg['version']]['start'], cwd=cfg['dir'])
-    elif action == 'stop':
+    elif action == 'stop': # Arreter
         with MCRcon('localhost', 25575, 'password') as mcr:
             mcr.command('stop')
-    elif action == 'kill':
+    elif action == 'kill': # Tuer
         for p in psutil.process_iter():
             if p.name() == 'java' and cfg['dir'] in p.cmdline():
                 p.kill()
                 break
-    elif action == 'delete':
+    elif action == 'delete': # Supprimer
         shutil.rmtree(cfg['dir'], ignore_errors=True)
         del servers[name]
         save_json(SERVERS_FILE, servers)
@@ -285,9 +285,7 @@ def servers_info():
         
         for process in psutil.process_iter(): # On regarde si il est actif
             if process.name() == 'java' and server_dir in process.cmdline():
-                server_status = 'active'
-                break
-        server['status'] = server_status
+                server['status'] = 'active'
         try:
             server['players'] = len(mcstatus.MinecraftServer('localhost', int(server_port)).status().players.sample) # On regarde le nombre de joueurs
             server['ip'] = mcstatus.MinecraftServer('localhost', int(server_port)).status().players.sample[0].name # On regarde son IP
@@ -300,7 +298,7 @@ def servers_info():
     print('Server not found')
     return jsonify({'name': 'Server not found'})
 
-def tail(file): # Fonciton pour renvoyer le contenue d'un fichier en stream
+def tail(file): # Fonction pour renvoyer le contenue d'un fichier en stream
     with open(file) as f:
         f.seek(0, 2)
         while True:
@@ -310,7 +308,7 @@ def tail(file): # Fonciton pour renvoyer le contenue d'un fichier en stream
                 continue
             yield f"data:{line}\n\n"
     
-@app.route('/server-log_stream') # API pour obtenir les logs d'un serveur
+@app.route('/server-log_stream') # API pour obtenir les logs d'un serveur [Non testé]
 @login_required
 def server_log(): # retourne un flux
     server_name = request.args.get("name")
@@ -318,58 +316,6 @@ def server_log(): # retourne un flux
         servers = json.load(j)
     log_dir = servers[server_name]['log']
     return Response(tail(log_dir))
-
-# @app.route('/servers-ctrl') # controle d'un serveur
-# @login_required
-# def servers_ctrl():
-#     server_name = request.args.get('name')
-#     action = request.args.get('action')
-#     with open('servers.json', 'r') as f:
-#         servers = json.load(f)
-#     with open('commands.json', 'r') as f:
-#         commands = json.load(f)
-#     if server_name in servers:
-#         server = servers[server_name]
-#         server_dir = server['dir']
-#         server_ram_min = server['ramMin']
-#         server_ram_max = server['ramMax']
-#         server_port = server['port']
-#         server_type = server['type']
-#         server_version = server['version']
-#         if action == 'start':
-#             result = subprocess.run(commands[server_type][server_version]['start'], cwd=server_dir, capture_output=True)
-#             print(result.stdout)
-#             print(result.stderr)
-#         elif action == 'stop':
-#             try:
-#                 with MCRcon('localhost', 25575, 'password') as mcr:
-#                     resp = mcr.command('stop')
-#                     print(resp)
-#             except Exception as e:
-#                 print(e)
-#         elif action == 'restart':
-#             try:
-#                 with MCRcon('localhost', 25575, 'password') as mcr:
-#                     resp = mcr.command('stop')
-#                     print(resp)
-#             except Exception as e:
-#                 print(e)
-#             result = subprocess.run(commands[server_type][server_version]['start'], cwd=server_dir, capture_output=True)
-#             print(result.stdout)
-#             print(result.stderr)
-#         elif action == 'kill':
-#             for process in psutil.process_iter():
-#                 if process.name() == 'java' and server_dir in process.cmdline():
-#                     process.kill()
-#                     break
-#         elif action == 'delete':
-#             os.remove(server_dir)
-#             del servers[server_name]
-#             with open('servers.json', 'w') as f:
-#                 json.dump(servers, f)
-#         return jsonify({'status': 'ok'})
-#     print('Server not found')
-#     return jsonify({'status': 'error'})
 
 app.route('/server-properties')
 @login_required
@@ -384,28 +330,19 @@ def server_properties():
             properties = f.read()
         return jsonify(properties)
 
-@app.route('/server-versions') # retour des versions des serveurs
+@app.route('/server-versions') # retour des versions des serveurs ()
 @login_required
 def server_versions():
     # chargé le fichier json des versions
     with open('versions.json', 'r') as f: 
         versions = json.load(f)
-    server_type = request.args.get('type')### ! a ameliorer (boucle)
-    if server_type == 'vanilla':
-        response = versions['vanilla']
-    elif server_type == 'spigot':
-        response = versions['spigot']
-    elif server_type == 'paper':
-        response = versions['paper']
-    elif server_type == 'forge':
-        response = versions['forge']
-    elif server_type == 'fabric':
-        response = versions['fabric']
+    if isset(request.args.get('type')):
+        response = versions[request.args.get('type')]
     else:
         response = ['error']
     return jsonify(response)
 
-@app.route('/main-serverinfo')
+@app.route('/main-serverinfo') ## A transformer en stream
 @login_required
 def main_serverinfo():
     return jsonify({
