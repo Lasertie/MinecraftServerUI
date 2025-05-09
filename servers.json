@@ -1,21 +1,31 @@
 {
-    "khk": {
-        "type": "forge",
-        "version": "1.21.1",
-        "ramMin": "1G",
-        "ramMax": "2G",
-        "port": "25565",
-        "dir": "servers/khk",
-        "maxPlayers": "20",
-        "log": ""
-    },
-    "test": {
-        "type": "forge",
-        "version": "1.21.1",
-        "ramMin": "1G",
-        "ramMax": "2G",
-        "port": "25565",
-        "dir": "servers/test",
-        "maxPlayers": "20"
-    }
+  "khk": {
+    "type": "forge",
+    "version": "1.21.1",
+    "ramMin": "1G",
+    "ramMax": "2G",
+    "port": "25565",
+    "dir": "servers/khk",
+    "maxPlayers": "20",
+    "log": ""
+  },
+  "test": {
+    "type": "forge",
+    "version": "1.21.1",
+    "ramMin": "1G",
+    "ramMax": "2G",
+    "port": "25565",
+    "dir": "servers/test",
+    "maxPlayers": "20"
+  },
+  "LLLKK": {
+    "type": "forge",
+    "version": "1.20.1",
+    "ramMin": "1G",
+    "ramMax": "2G",
+    "port": "25565",
+    "seed": "",
+    "maxPlayers": "20",
+    "dir": "servers/LLLKK"
+  }
 }
