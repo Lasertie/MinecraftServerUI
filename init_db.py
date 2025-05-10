@@ -2,40 +2,38 @@
 import json
 import os
 from werkzeug.security import generate_password_hash
+import uuid
 
+#---------------------------------------------------------------Languages
+languages = {
+    "fr": {
+        1: "Choisissez un nom d'utilisateur ",
+        2: "Choisissez un mot de passe pour l'utilisateur ",
+        3: "Fichier JSON corrompu, recréation..."
+    },
+    "en": {
+        1: "Choose a username  ",
+        2: "Choose a password for the user ",
+        3: "JSON file corrupted, recreate..."
+    },
+    "de": {
+        1: "Wählen Sie einen Benutzernamen ",
+        2: "Wählen Sie ein Passwort für den Benutzer ",
+        3: "Beschädigte JSON-Datei, Neuerstellung..."
+    },
+    "es": {
+        1: "Elija un nombre de usuario ",
+        2: "Elija una contraseña para el usuario ",
+        3: "Archivo JSON dañado, volver a crear..."
+    }
+}
+
+#---------------------------------------------------------------Variables definitions
 USERS_FILE = "users.json"
 
-def init_db():
-    # suppression des tables
-    with open(USERS_FILE, "w") as f:
-        json.dump({"codes": []}, f, indent=4)
-        
-    print("Ajout de l'utilisateur admin {root}")
-    print("Adding the admin user {root}")
-    print("Veuillez entrer le mot de passe de l'utilisateur admin {root}")
-    print("Please enter the password of the admin user {root}")
-    password = input()
-    # ajout de l'utilisateur admin
-    create_user_access(password, "root")
-
-    print("Ajout d'un utilisateur de base (user)")
-    print("Adding a basic user (user)")
-    print("Veuillez entrer le nom d'utilisateur de l'utilisateur de base (user)")
-    print("Please enter the username of the user 'user'")
-    username = input()
-    print("Veuillez entrer le mot de passe de l'utilisateur de base (user)")
-    print("Please enter the password of the user 'user'")
-    password = input()
-    # hash du mot de passe
-    password = generate_password_hash(password)
-    # ajout de l'utilisateur de base
-    create_user_access(password, "user")
-        
-    db.session.commit()
-    print("Base de données initialisée avec succès et utilisateurs ajoutés.")
-
-def create_user_access(code, role):
-    data = {"codes": []}
+#---------------------------------------------------------------Create a user
+def create_user_access(username, password, role):
+    data = {}
 
     # Charger le fichier s'il existe
     if os.path.exists(USERS_FILE):
@@ -43,24 +41,48 @@ def create_user_access(code, role):
             try:
                 data = json.load(f)
             except json.JSONDecodeError:
-                print("⚠️ Fichier JSON corrompu, recréation.")
+                print("")#TODO
 
-    # Vérifier si le code existe déjà
-    for entry in data["codes"]:
-        if entry["code"] == code:
-            print("⚠️ Ce code existe déjà.")
-            return
+    # Générer le nouvel id
+    new_id = uuid.uuid4()
 
     # Ajouter le nouvel accès
-    data["codes"].append({
-        "code": code,
+    data[new_id] = {
+        "username": username,
+        "password_hash": password,
         "role": role
-    })
+    }
 
+    # Écrire les données mises à jour dans le fichier
     with open(USERS_FILE, "w") as f:
         json.dump(data, f, indent=4)
 
-    print(f"✅ Accès '{role}' avec code '{code}' ajouté.")
+    print("")#TODO
 
+#---------------------------------------------------------------Remove a user
+#TODO
 
-init_db()
+#---------------------------------------------------------------Add a root user
+def add_root_user():
+    username = input()
+    password = input()
+    password_hash = generate_password_hash(password)
+    create_user_access(username, password_hash, "root")
+
+#---------------------------------------------------------------Add a moderator user
+def add_moderator_user():
+    username = input()
+    password = input()
+    password_hash = generate_password_hash(password)
+    create_user_access(username, password_hash, "moderator")
+
+#---------------------------------------------------------------Add a simple user
+def add_simple_user():
+    username = input()
+    password = input()
+    password_hash = generate_password_hash(password)
+    create_user_access(username, password_hash, "user")
+
+#-----------------------------------------------------------------------------------------------------------------------Main
+
+password = input(languages["fr"][1])
