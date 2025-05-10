@@ -84,6 +84,5 @@ def add_simple_user():
     create_user_access(username, password_hash, "user")
 
 #-----------------------------------------------------------------------------------------------------------------------Main
-
 if __name__ == "__main__":
     password = input(languages["fr"][1])
