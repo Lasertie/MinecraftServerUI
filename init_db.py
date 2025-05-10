@@ -29,8 +29,7 @@ def init_db():
     # hash du mot de passe
     password = generate_password_hash(password)
     # ajout de l'utilisateur de base
-    user = User(username=username, password=password, role="user")
-    db.session.add(user)
+    create_user_access(password, "user")
         
     db.session.commit()
     print("Base de données initialisée avec succès et utilisateurs ajoutés.")
