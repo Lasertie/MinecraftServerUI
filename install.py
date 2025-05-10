@@ -69,10 +69,24 @@ languages = {
     }
 }
 
+#---------------------------------------------------------------Platform commands 
+platform_commands = {
+    "linux": [
+        "python3"
+    ],
+    "win32": [
+        "python"
+    ],
+    "cygwin": ["python"],
+    "darwin":["python"],
+    "aix": ["python"]
+}
+
 #---------------------------------------------------------------Variables definitions
 SETTINGS_FILE = "settings.json"
 language_chosen = None
 finish = False
+system_platform = sys.platform
 
 #---------------------------------------------------------------Save Language
 def save_language(language):
@@ -234,7 +248,7 @@ if __name__ == "__main__":
         print("\n")
         venv_choice = input(languages[language_chosen][4])
         if venv_choice.lower() in ["o", "y", "j", "s"]:
-            subprocess.run(["python", "-m", "venv", "venv"])
+            subprocess.run([platform_commands[system_platform][0], "-m", "venv", "venv"])
             pip_path = "./venv/bin/pip"
         else:
             print(languages[language_chosen][8])
