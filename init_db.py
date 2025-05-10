@@ -85,4 +85,5 @@ def add_simple_user():
 
 #-----------------------------------------------------------------------------------------------------------------------Main
 
-password = input(languages["fr"][1])
+if __name__ == "__main__":
+    password = input(languages["fr"][1])
