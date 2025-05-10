@@ -124,7 +124,7 @@ def finish_installation():
         subprocess.run(["venv/bin/python", "init_db.py"])
     else:
         print("\n")
-        subprocess.run(["python", "init_db.py"])
+        subprocess.run([platform_commands[system_platform][0], "init_db.py"])
 
 #---------------------------------------------------------------GUI Language
 class GUI_Language(QMainWindow):
@@ -200,7 +200,7 @@ class GUI_Venv(QMainWindow):
         global pip_path
         print("\n")
         print(languages[language_chosen][7])
-        subprocess.run(["python", "-m", "venv", "venv"])
+        subprocess.run([platform_commands[system_platform][0], "-m", "venv", "venv"])
         pip_path = "./venv/bin/pip"
         self.close()
         finish_installation()
