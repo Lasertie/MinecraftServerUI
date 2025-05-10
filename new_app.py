@@ -19,7 +19,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
-# --- JSON file paths ---
+# ------------------------------------------ JSON file paths ---------------------------------- #
 JSON_DIR = os.path.abspath(os.path.dirname(__file__))
 USERS_FILE = os.path.join(JSON_DIR, 'users.json')
 SERVERS_FILE = os.path.join(JSON_DIR, 'servers.json')
@@ -27,7 +27,7 @@ VERSIONS_FILE = os.path.join(JSON_DIR, 'versions.json')
 COMMANDS_FILE = os.path.join(JSON_DIR, 'commands.json')
 SETTINGS_FILE = os.path.join(JSON_DIR, 'settings.json')
 
-# --- User management using JSON ---
+# --- User management ---
 class User(UserMixin):
     def __init__(self, id, username, password_hash, role):
         self.id = str(id)
@@ -85,7 +85,7 @@ class User(UserMixin):
             del users[self.id]
             User.save_all(users)
 
-# --- Flask-Login setup ---
+# ------------------------------------------------- Flask-Login setup ---------------------------------------------------#
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -104,7 +104,7 @@ def role_required(role):
         return decorated_function
     return decorator
 
-# --- Authentication routes ---
+# ----------------------------------------------- Authentication routes -------------------------------#
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -124,7 +124,7 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-# --- Utility to load/save other JSON files ---
+# ----------------------------------------------- Utility to load/save other JSON files -------------------------------------------- #
 def load_json(path):
     if not os.path.isfile(path):
         return {}
@@ -135,8 +135,8 @@ def save_json(path, data):
     with open(path, 'w') as f:
         json.dump(data, f, indent=2)
 
-# --- Routes for server management ---
-@app.route('/')
+# ---------------------------------------------------- Routes for server management ---------------------------------------------------- #
+@app.route('/') # racine du projet
 @login_required
 def home():
     return render_template('index.html')
@@ -336,7 +336,7 @@ def server_versions():
     # chargé le fichier json des versions
     with open('versions.json', 'r') as f: 
         versions = json.load(f)
-    if isset(request.args.get('type')):
+    if True : #request.args.get('type') in locals():
         response = versions[request.args.get('type')]
     else:
         response = ['error']
@@ -510,4 +510,7 @@ def webdav():
     return redirect('/webdav/')
 
 if __name__ == '__main__':
+    with open(SETTINGS_FILE, 'r') as f:
+        settings_port = json.load(f)
+        
     app.run(host='0.0.0.0', port=5000, debug=True)

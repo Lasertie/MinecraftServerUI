@@ -120,7 +120,7 @@
                             .then(response => response.json())
                             .then(data => {
                                 console.log(data);
-                                if (data.name === 'Server not found') {
+                                if (data.error === 'Server not found') {
                                     NameAlreadyUsed.style.display = 'none';
                                     submitBtn.style.display = '';
                                 } else {

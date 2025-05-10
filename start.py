@@ -54,7 +54,7 @@ def start():
     print("Voulez-vous mettre a jour les fichiers depuis le repo github ? (o/n)")
     choix = input()
     if choix == "o":
-        os.system('venv/bin/python3 maj.py')
+        os.system('venv/bin/python maj.py')
 
     # demander si l'utilisateur veut demarrer le serveur au demarrage de l'ordinateur
     print("Voulez-vous demarrer le serveur au demarrage de l'ordinateur ? [O(Oui)/n(Non)]")
