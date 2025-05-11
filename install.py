@@ -20,7 +20,8 @@ languages = {
         10: "Non",
         11: "[INFO] -- Installation des dépendances...",
         12: "[INFO] -- Création du dossier \"servers\"...",
-        13: "[INFO] -- Éxecution de \"init_db.py\"..."
+        13: "[INFO] -- Éxecution de \"init_db.py\"...",
+        14: "Sur quel port voullez vous executer MinePylot ?"
     },
     "en": {
         1: "[EN] Do you want to use the application from the command line or with a graphical interface ?",
@@ -35,7 +36,8 @@ languages = {
         10: "No",
         11: "[INFO] -- Installing dependencies...",
         12: "[INFO] -- Creation of the folder \"servers\"...",
-        13: "[INFO] -- Execution of \"init_db.py\"..."
+        13: "[INFO] -- Execution of \"init_db.py\"...",
+        14: "What port do you want to use to run MinePylot?"
     },
     "de": {
         1: "[DE] Möchten Sie die Anwendung als Kommandozeile oder mit grafischer Benutzeroberfläche verwenden ?",
@@ -50,7 +52,8 @@ languages = {
         10: "Nein",
         11: "[INFO] -- Installation von Abhängigkeiten...",
         12: "[INFO] -- Anlegen des Ordners \"servers\"...",
-        13: "[INFO] -- Ausführung von \"init_db.py\"..."
+        13: "[INFO] -- Ausführung von \"init_db.py\"...",
+        14: "An welchem Port möchten Sie MinePylot ausführen?"
     },
     "es": {
         1: "[ES] ¿ Desea utilizar la aplicación en la línea de comandos o con una interfaz gráfica ?",
@@ -65,7 +68,8 @@ languages = {
         10: "No",
         11: "[INFO] -- Instalando dependencias...",
         12: "[INFO] -- Creación de carpeta \"servers\"...",
-        13: "[INFO] -- Ejecución de \"init_db.py\"..."
+        13: "[INFO] -- Ejecución de \"init_db.py\"...",
+        14: "¿En qué puerto desea ejecutar MinePylot?"
     }
 }
 
@@ -86,7 +90,7 @@ platform_commands = {
 SETTINGS_FILE = "settings.json"
 language_chosen = None
 finish = False
-system_platform = sys.platform
+system_platform = sys.platform # Find os
 
 #---------------------------------------------------------------Save Language
 def save_language(language):
@@ -253,6 +257,13 @@ if __name__ == "__main__":
         else:
             print(languages[language_chosen][8])
             pip_path = "pip"
+        #---------------------------------------Ask port
+        with open(SETTINGS_FILE) as file:
+            settings = json.load(file)
+        print(languages[language_chosen][14])
+        settings["port"] = input('[Default : 5000] : ')
+        with open(SETTINGS_FILE, "w") as f:
+            json.dump(settings, f, indent=4)
         finish_installation()
 
     elif configuration_chosen == "GUI":

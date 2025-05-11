@@ -136,6 +136,7 @@ def save_json(path, data):
         json.dump(data, f, indent=2)
 
 # ---------------------------------------------------- Routes for server management ---------------------------------------------------- #
+# |||||||||||| Pages affichés |||||||||||| #
 @app.route('/') # racine du projet
 @login_required
 def home():
@@ -154,7 +155,30 @@ def send_css():
 def send_js():
     return send_file('templates/js/script.js')
 
+@app.route('/server')
+#@login_required
+def server():
+    return render_template('server.html')
 
+@app.route('/servers')
+#@login_required
+def servers():
+    return render_template('servers.html')
+
+@app.route('/settings')
+#@login_required
+@role_required('root')
+def settings():
+    return render_template('settings.html')
+
+@app.route('/users')
+@login_required
+@role_required('root')
+def usersServe():
+    return render_template('users.html')
+
+
+# |||||||||||| Nouveau serveur (API + PAGE) |||||||||||| #
 @app.route('/new-server')
 @login_required
 def new_server():
@@ -201,44 +225,7 @@ def new_server():
         return redirect(f"/server?name={name}")
     return render_template('new-server.html')
 
-@app.route('/server-info') #Obtenir les infos du serveur
-@login_required
-def server_info():
-    name = request.args.get('name')
-    servers = load_json(SERVERS_FILE)
-    if name not in servers:
-        return jsonify({'error': 'Server not found'}), 404 # Renvoie 404 si le serveur n'est pas trouvé 
-    cfg = servers[name]
-    info = {'status': 'inactive', 'players': 0}
-    for p in psutil.process_iter():
-        if p.name() == 'java' and cfg['dir'] in p.cmdline():
-            info['status'] = 'active'
-            info['ramUsed'] = psutil.Process(p.pid).memory_info().rss / (1024**2)
-            break
-    try:
-        status = mcstatus.MinecraftServer('localhost', int(cfg['port'])).status()
-        info['players'] = status.players.online
-    except:
-        info['players'] = 0
-    return jsonify(info)
-
-# @app.route('/servers-data')
-# @login_required
-# def servers_data():
-#     servers = load_json(SERVERS_FILE)
-#     for name, cfg in servers.items():
-#         cfg['status'] = 'inactive'
-#         cfg['players'] = 0
-#         for p in psutil.process_iter():
-#             if p.name() == 'java' and cfg['dir'] in p.cmdline():
-#                 cfg['status'] = 'active'
-#                 break
-#         try:
-#             cfg['players'] = mcstatus.MinecraftServer('localhost', int(cfg['port'])).status().players.online
-#         except:
-#             cfg['players'] = 0
-#     return jsonify(servers)
-
+# |||||||||||| API pour controler un serveur |||||||||||| #
 @app.route('/servers-ctrl') # Faire des actions sur un serveur
 @login_required
 def servers_ctrl():
@@ -265,10 +252,10 @@ def servers_ctrl():
         save_json(SERVERS_FILE, servers)
     return jsonify({'status': 'ok'})
 
-
-@app.route('/server-info') # Point d API pour obtenir des infos sur un serveur
+# |||||||||||| API pour obtenir des infos sur un serveur |||||||||||| #
+@app.route('/server-info')
 @login_required
-def servers_info():
+def server_info():
     server_name = request.args.get('name') # On recupère le paramètre
     with open('servers.json', 'r') as f:
         servers = json.load(f)
@@ -281,22 +268,23 @@ def servers_info():
         server_port = server['port']
         server_type = server['type']
         server_version = server['version']
-        server_status = 'inactive'
+
+        server['status'] = 'inactive'
+        server['ip'] = None
         
-        for process in psutil.process_iter(): # On regarde si il est actif
-            if process.name() == 'java' and server_dir in process.cmdline():
+        for p in psutil.process_iter():
+            if p.name() == 'java' and server['dir'] in p.cmdline():
                 server['status'] = 'active'
+                server['ramUsed'] = psutil.Process(p.pid).memory_info().rss / (1024**2)
+                break
         try:
-            server['players'] = len(mcstatus.MinecraftServer('localhost', int(server_port)).status().players.sample) # On regarde le nombre de joueurs
-            server['ip'] = mcstatus.MinecraftServer('localhost', int(server_port)).status().players.sample[0].name # On regarde son IP
-            server['ramUsed'] = psutil.Process(process.pid).memory_info().rss / 1024 / 1024 # Et la quantitié de ram qui est utilisée
-        except Exception as e: # Si ca ne marche pas ca veut dire qu'il n'est pas allumé
+            status = mcstatus.MinecraftServer('localhost', int(server['port'])).status()
+            server['players'] = status.players.online
+        except:
             server['players'] = 0
-            server['ip'] = 'none'
-            server['ramUsed'] = 0
         return jsonify(server) # et on renvoie en json
     print('Server not found')
-    return jsonify({'name': 'Server not found'})
+    return jsonify({'error': 'Server not found'}), 404
 
 def tail(file): # Fonction pour renvoyer le contenue d'un fichier en stream
     with open(file) as f:
@@ -307,8 +295,9 @@ def tail(file): # Fonction pour renvoyer le contenue d'un fichier en stream
                 time.sleep(0.1)
                 continue
             yield f"data:{line}\n\n"
-    
-@app.route('/server-log_stream') # API pour obtenir les logs d'un serveur [Non testé]
+
+# |||||||||||| API pour obtenir les logs d'un serveur [En developpement] |||||||||||| #
+@app.route('/server-log_stream')
 @login_required
 def server_log(): # retourne un flux
     server_name = request.args.get("name")
@@ -317,6 +306,7 @@ def server_log(): # retourne un flux
     log_dir = servers[server_name]['log']
     return Response(tail(log_dir))
 
+# |||||||||||| API pour modifier le fichier "properties" d'un serveur |||||||||||| #
 app.route('/server-properties')
 @login_required
 def server_properties():
@@ -330,6 +320,7 @@ def server_properties():
             properties = f.read()
         return jsonify(properties)
 
+# |||||||||||| API pour reevoir les versions d'un serveur |||||||||||| #
 @app.route('/server-versions') # retour des versions des serveurs ()
 @login_required
 def server_versions():
@@ -342,6 +333,7 @@ def server_versions():
         response = ['error']
     return jsonify(response)
 
+# |||||||||||| API pour obtenir les stats du SERVEUR |||||||||||| #
 @app.route('/main-serverinfo') ## A transformer en stream
 @login_required
 def main_serverinfo():
@@ -352,8 +344,9 @@ def main_serverinfo():
         'bandwidth': psutil.net_io_counters().bytes_recv + psutil.net_io_counters().bytes_sent
     })
 
+# |||||||||||| API pour obtenir les infos des servers |||||||||||| #
 @app.route('/servers-data')
-#@login_required
+@login_required
 def servers_data():
     with open('servers.json', 'r') as f:
         servers = json.load(f)
@@ -374,24 +367,9 @@ def servers_data():
             servers[server]['players'] = 0
     return jsonify(servers)
 
-@app.route('/server')
-#@login_required
-def server():
-    return render_template('server.html')
-
-@app.route('/servers')
-#@login_required
-def servers():
-    return render_template('servers.html')
-
-@app.route('/settings')
-#@login_required
-@role_required('root')
-def settings():
-    return render_template('settings.html')
-
+# |||||||||||| API pour changer les settings |||||||||||| #
 @app.route('/settings-ctl')
-#@login_required
+@login_required
 @role_required('root')
 def settings_ctrl():
     action = request.args.get('action')
@@ -412,12 +390,7 @@ def settings_ctrl():
         return jsonify({'status': 'ok'})
     return jsonify({'status': 'error'})
 
-@app.route('/users')
-#@login_required
-@role_required('root')
-def usersServe():
-    return render_template('users.html')
-
+# |||||||||||| API pour modifier les utilisateurs |||||||||||| #
 @app.route('/users-ctl')
 @login_required
 @role_required('root')
@@ -492,7 +465,7 @@ def page_not_found(error):
 def internal_server_error(error):
     return render_template('500.html'), 500
 
-# --- WebDAV setup ---
+# --- WebDAV setup [En developpement] --- #
 with app.app_context():
     dav_provider = FilesystemProvider(os.getcwd(), readonly=False)
     dav_app = WsgiDAVApp({
@@ -513,4 +486,4 @@ if __name__ == '__main__':
     with open(SETTINGS_FILE, 'r') as f:
         settings_port = json.load(f)
         
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=settings_port["port"], debug=True)
