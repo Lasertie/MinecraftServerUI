@@ -17,7 +17,8 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, curren
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+app.secret_key = "b'\x84\t\x8c\x94\xdc\x1a\x8bv\x18Ac\xaf\xf4*\xeeDu\x9e\xe4y\x02\x085a'" #os.urandom(24) # On enleve la génération de clé secrete pour les tests
+# print(app.secret_key)
 
 # ------------------------------------------ JSON file paths ---------------------------------- #
 JSON_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -26,6 +27,7 @@ SERVERS_FILE = os.path.join(JSON_DIR, 'servers.json')
 VERSIONS_FILE = os.path.join(JSON_DIR, 'versions.json')
 COMMANDS_FILE = os.path.join(JSON_DIR, 'commands.json')
 SETTINGS_FILE = os.path.join(JSON_DIR, 'settings.json')
+JAVA_PATH = "/usr/bin/java"
 
 # --- User management ---
 class User(UserMixin):
@@ -177,6 +179,21 @@ def settings():
 def usersServe():
     return render_template('users.html')
 
+def download_file(url, save_path):
+    with requests.get(url, stream=True) as r:
+        r.raise_for_status()
+        expected_size = int(r.headers.get('content-length', 0))
+
+        with open(save_path, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                f.write(chunk)
+
+        # Verify the file size
+        current_size = os.path.getsize(save_path)
+        if current_size == expected_size:
+            print("File download completed.")
+        else:
+            print(f"File download incomplete. Expected size: {expected_size}, Actual size: {current_size}")
 
 # |||||||||||| Nouveau serveur (API + PAGE) |||||||||||| #
 @app.route('/new-server')
@@ -193,7 +210,7 @@ def new_server():
             'port': data.get('serverPort', '25565'),
             'seed': data.get('serverSeed', ''),
             'maxPlayers': data.get('serverMaxPlayers', '20'),
-            'dir': os.path.join('servers', name)
+            'dir': "./" + os.path.join('servers', name)
         }
         servers = load_json(SERVERS_FILE)
         servers[name] = cfg
@@ -202,11 +219,8 @@ def new_server():
         versions = load_json(VERSIONS_FILE)
         url = versions[cfg['type']][cfg['version']]
         jar_path = os.path.join(cfg['dir'], 'install.jar')
-        with requests.get(url, stream=True) as r:
-            r.raise_for_status()
-            with open(jar_path, 'wb') as f:
-                for chunk in r.iter_content(8192):
-                    f.write(chunk)
+        download_file(url, jar_path)
+
         with open(os.path.join(cfg['dir'], 'eula.txt'), 'w') as f:
             f.write('eula=true')
         props = [
@@ -216,13 +230,32 @@ def new_server():
         ]
         with open(os.path.join(cfg['dir'], 'server.properties'), 'w') as f:
             f.write("\n".join(props))
+
         commands = load_json(COMMANDS_FILE)
-        cmd = commands[cfg['type']][cfg['version']]['install']
-        subprocess.run(cmd, cwd=cfg['dir'], capture_output=True)
+        command = commands[cfg['type']][cfg['version']]['install']
+        print("Directory:", cfg['dir'])
+        command = command.lstrip('java')
+        cmd = JAVA_PATH + command
+        print("Command to execute:", cmd)
+
+        try:
+            # Changer le répertoire de travail
+            os.chdir(cfg['dir'])
+
+            # Exécuter la commande
+            result = os.popen(cmd).read()
+            # result = subprocess.run(cmd, cwd=cfg['dir'], capture_output=True, text=True, check=True)
+            print("Command executed successfully")
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred: {e.stderr}")
+
         files = glob.glob(os.path.join(cfg['dir'], 'minecraft_server.*.jar'))
+        print("Found files:", files)
         if files:
             os.rename(files[0], os.path.join(cfg['dir'], 'server.jar'))
+
         return redirect(f"/server?name={name}")
+
     return render_template('new-server.html')
 
 # |||||||||||| API pour controler un serveur |||||||||||| #
@@ -237,7 +270,7 @@ def servers_ctrl():
         return jsonify({'error': 'Server not found'}), 404
     cfg = servers[name]
     if action == 'start': # Démarrer
-        subprocess.run(commands[cfg['type']][cfg['version']]['start'], cwd=cfg['dir'])
+        print(subprocess.run(commands[cfg['type']][cfg['version']]['start'], cwd=cfg['dir'], shell=True))
     elif action == 'stop': # Arreter
         with MCRcon('localhost', 25575, 'password') as mcr:
             mcr.command('stop')

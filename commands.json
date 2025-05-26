@@ -68,7 +68,7 @@
             "stop": "stop"
         },
         "1.20.1": {
-            "install": "java -jar install.jar --installServer",
+            "install": "java -jar ./install.jar --installServer",
             "start": "./run.sh nogui",
             "stop": "stop"
         },
