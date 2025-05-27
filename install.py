@@ -2,8 +2,12 @@
 import os
 import sys
 import subprocess
-import json
-from PyQt5.QtWidgets import *
+import json 
+try:
+    from PyQt5.QtWidgets import *
+    print("PyQt5 est installé et importé avec succès.")
+except ImportError:
+    print("PyQt5 n'est pas installé.")
 
 #---------------------------------------------------------------Languages
 languages = {

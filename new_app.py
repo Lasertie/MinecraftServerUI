@@ -146,7 +146,7 @@ def home():
 
 @app.route('/favicon.ico') # retour de l'icone
 def favicon():
-    return send_file('favicon.ico')
+    return send_file('favicon-abbg  .ico')
 
 @app.route('/css/style.css') # retour du fichiers css
 def send_css():
@@ -487,6 +487,13 @@ def users_ctl():
 
     # action inconnue
     return jsonify({'status':'error', 'msg':'action invalide'}), 400
+
+# |||||||||||| API pour controler les mods |||||||||||| #
+@app.route('/mod-ctl')
+@login_required
+def mod_ctl():
+    
+    pass
 
 @app.errorhandler(404)
 #@login_required
