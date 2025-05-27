@@ -278,4 +278,5 @@ if __name__ == "__main__":
         window = GUI_Language()
         window.show()
 
-    sys.exit(app.exec())
+    if (GUI!=False):
+        sys.exit(app.exec())
