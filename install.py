@@ -10,8 +10,7 @@ except ImportError:
     print("PyQt5 n'est pas installé.")
     class QMainWindow():
         pass
-    class QApplication(arg1):
-        pass
+    GUI = False
 
 #---------------------------------------------------------------Languages
 languages = {
@@ -83,7 +82,7 @@ languages = {
 
 #---------------------------------------------------------------Platform commands 
 platform_commands = {
-    "linux": [
+"linux": [
         "python3"
     ],
     "win32": [
@@ -229,7 +228,8 @@ class GUI_Venv(QMainWindow):
 #-----------------------------------------------------------------------------------------------------------------------Main
 if __name__ == "__main__":
 
-    app = QApplication(sys.argv)
+    if (GUI!= False):
+        app = QApplication(sys.argv)
 
     print(r"""
     __  ____                            ______  _____                           __  ______
