@@ -146,7 +146,7 @@ def home():
 
 @app.route('/favicon.ico') # retour de l'icone
 def favicon():
-    return send_file('favicon-abbg  .ico')
+    return send_file('favicon-abbg.ico')
 
 @app.route('/css/style.css') # retour du fichiers css
 def send_css():
@@ -492,7 +492,7 @@ def users_ctl():
 @app.route('/mod-ctl')
 @login_required
 def mod_ctl():
-    
+
     pass
 
 @app.errorhandler(404)
