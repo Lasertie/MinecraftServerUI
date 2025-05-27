@@ -10,7 +10,7 @@ except ImportError:
     print("PyQt5 n'est pas installé.")
     class QMainWindow():
         pass
-    class QApplication():
+    class QApplication(arg1):
         pass
 
 #---------------------------------------------------------------Languages
