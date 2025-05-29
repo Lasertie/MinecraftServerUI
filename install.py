@@ -146,7 +146,7 @@ def finish_installation():
 class GUI_Language(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("MinecraftServerUI : Language")
+        self.setWindowTitle("MinePylot : Language")
         self.setWindowIcon(QIcon("logo.png"))
         self.setGeometry(300, 100, 1100, 550)
         self.setFixedWidth(1150)
@@ -227,7 +227,7 @@ class GUI_Venv(QMainWindow):
         super().__init__()
 
         title = languages[language_chosen][5]
-        self.setWindowTitle(f"MinecraftServerUI : {title}")
+        self.setWindowTitle(f"MinePylot : {title}")
         self.setGeometry(300, 300, 400, 200)
 
         central_widget = QWidget()
@@ -273,12 +273,12 @@ if __name__ == "__main__":
         app = QApplication(sys.argv)
 
     print(r"""
-    __  ____                            ______  _____                           __  ______
-   /  |/  (_)___  ___  ______________ _/ __/ /_/ ___/___  ______   _____  _____/ / / /  _/
-  / /|_/ / / __ \/ _ \/ ___/ ___/ __ `/ /_/ __/\__ \/ _ \/ ___/ | / / _ \/ ___/ / / // /  
- / /  / / / / / /  __/ /__/ /  / /_/ / __/ /_ ___/ /  __/ /   | |/ /  __/ /  / /_/ // /   
-/_/  /_/_/_/ /_/\___/\___/_/   \__,_/_/  \__//____/\___/_/    |___/\___/_/   \____/___/   
-
+    __  ____            ____        __      __ 
+   /  |/  (_)___  ___  / __ \__  __/ /___  / /_
+  / /|_/ / / __ \/ _ \/ /_/ / / / / / __ \/ __/
+ / /  / / / / / /  __/ ____/ /_/ / / /_/ / /_  
+/_/  /_/_/_/ /_/\___/_/    \__, /_/\____/\__/  
+                          /____/               
 """)
 
     #---------------------------------------Ask GUI/CMD
