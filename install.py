@@ -1,17 +1,3 @@
-#---------------------------------------------------------------Importations
-import os
-import sys
-import subprocess
-import json 
-try:
-    from PyQt5.QtWidgets import *
-    print("PyQt5 est installé et importé avec succès.")
-except ImportError:
-    print("PyQt5 n'est pas installé.")
-    class QMainWindow():
-        pass
-    GUI = False
-
 #---------------------------------------------------------------Languages
 languages = {
     "fr": {
@@ -28,7 +14,8 @@ languages = {
         11: "[INFO] -- Installation des dépendances...",
         12: "[INFO] -- Création du dossier \"servers\"...",
         13: "[INFO] -- Éxecution de \"init_db.py\"...",
-        14: "Sur quel port voullez vous executer MinePylot ?"
+        14: "[INFO] -- PyQt5 fonctionnel",
+        15: "[ERROR] -- PyQt5 n'est pas installé"
     },
     "en": {
         1: "[EN] Do you want to use the application from the command line or with a graphical interface ?",
@@ -44,7 +31,8 @@ languages = {
         11: "[INFO] -- Installing dependencies...",
         12: "[INFO] -- Creation of the folder \"servers\"...",
         13: "[INFO] -- Execution of \"init_db.py\"...",
-        14: "What port do you want to use to run MinePylot?"
+        14: "[INFO] -- PyQt5 functional",
+        15: "[ERROR] -- PyQt5 is not installed"
     },
     "de": {
         1: "[DE] Möchten Sie die Anwendung als Kommandozeile oder mit grafischer Benutzeroberfläche verwenden ?",
@@ -60,7 +48,8 @@ languages = {
         11: "[INFO] -- Installation von Abhängigkeiten...",
         12: "[INFO] -- Anlegen des Ordners \"servers\"...",
         13: "[INFO] -- Ausführung von \"init_db.py\"...",
-        14: "An welchem Port möchten Sie MinePylot ausführen?"
+        14: "[INFO] -- PyQt5 funktioniert",
+        15: "[ERROR] -- PyQt5 ist nicht installiert"
     },
     "es": {
         1: "[ES] ¿ Desea utilizar la aplicación en la línea de comandos o con una interfaz gráfica ?",
@@ -76,18 +65,34 @@ languages = {
         11: "[INFO] -- Instalando dependencias...",
         12: "[INFO] -- Creación de carpeta \"servers\"...",
         13: "[INFO] -- Ejecución de \"init_db.py\"...",
-        14: "¿En qué puerto desea ejecutar MinePylot?"
+        14: "[INFO] -- PyQt5 está funcionando",
+        15: "[ERROR] -- PyQt5 no está instalado"
     }
 }
 
-#---------------------------------------------------------------Platform commands 
+#---------------------------------------------------------------Importations
+import os
+import sys
+import subprocess
+import json
+try:
+    from PyQt5.QtWidgets import *
+    from PyQt5.QtGui import *
+    from PyQt5.QtCore import *
+    for lang_code, phrases in languages.items():
+        print(phrases[14])
+    GUI = True
+except ImportError:
+    for lang_code, phrases in languages.items():
+        print(phrases[15])
+    class QMainWindow():
+        pass
+    GUI = False
+
+#---------------------------------------------------------------Platform commands
 platform_commands = {
-"linux": [
-        "python3"
-    ],
-    "win32": [
-        "python"
-    ],
+    "linux": ["python3"],
+    "win32": ["python"],
     "cygwin": ["python"],
     "darwin":["python"],
     "aix": ["python"]
@@ -97,7 +102,7 @@ platform_commands = {
 SETTINGS_FILE = "settings.json"
 language_chosen = None
 finish = False
-system_platform = sys.platform # Find os
+system_platform = sys.platform
 
 #---------------------------------------------------------------Save Language
 def save_language(language):
@@ -142,24 +147,60 @@ class GUI_Language(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("MinecraftServerUI : Language")
-        self.setGeometry(300, 300, 400, 200)
+        self.setWindowIcon(QIcon("logo.png"))
+        self.setGeometry(300, 100, 1100, 550)
+        self.setFixedWidth(1150)
+        self.setFixedHeight(550)
+        self.setStyleSheet("background-color: #1e1f22; color: #ffffff;")
+
+        QApplication.setStyle("windows")  # Fusion or WindowsVista
 
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
-        layout = QVBoxLayout()
-        central_widget.setLayout(layout)
+        main_layout = QHBoxLayout()
+        central_widget.setLayout(main_layout)
 
+        # Left Section - Logo
+        left_layout = QVBoxLayout()
+        logo_pixmap = QPixmap("logo.png").scaled(400, 400, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        logo_label = QLabel()
+        logo_label.setPixmap(logo_pixmap)
+        left_layout.addSpacing(50)
+        left_layout.addWidget(logo_label, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignCenter)
+        footer_label = QLabel("2025 - Made by Lasertie and $now_")
+        footer_label.setStyleSheet("font-size: 12px; color: #555555;")
+        left_layout.addWidget(footer_label, alignment=Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignLeft)
+
+        # Separator
+        separator = QFrame()
+        separator.setFrameShape(QFrame.Shape.VLine)
+        separator.setStyleSheet("border: 1px solid #72bf3c;")
+        separator.setFixedWidth(2)
+
+        # Right Section - Text and Controls
+        right_layout = QVBoxLayout()
         for lang_code, phrases in languages.items():
             label = QLabel(phrases[2])
-            layout.addWidget(label)
+            label.setStyleSheet("font-size: 14px; padding: 8px; background-color: #2c2f33; border-radius: 5px; margin-top: 15px; margin-bottom: 5px; margin-right: 20px;")
+            right_layout.addWidget(label)
 
         self.language_dropdown = QComboBox()
         self.language_dropdown.addItems(["Français", "English", "Deutsch", "Español"])
-        layout.addWidget(self.language_dropdown)
+        self.language_dropdown.setStyleSheet("QComboBox {padding: 5px; font-size: 16px; background-color: #2f3136; color: #ffffff; border: 1px solid #72bf3c; border-radius: 5px; margin-left: 50px; margin-right: 70px; margin-top: 50px} QComboBox::drop-down {background-color: #2f3136; width: 30px; padding-left: 5px;} QComboBox::down-arrow {image: url('arrow.png'); width: 16px; height: 16px; background-color: transparent;} QComboBox QAbstractItemView {background-color: #2f3136; selection-background-color: #444751; selection-color: #ffffff; border: 1px solid #72bf3c;}")
+        right_layout.addWidget(self.language_dropdown)
 
         ok_button = QPushButton("OK")
+        ok_button.setStyleSheet("background-color: #72bf3c; padding: 10px; font-size: 16px; border-radius: 5px; margin-left: 50px; margin-right: 70px; margin-top: 150px;")
         ok_button.clicked.connect(self.save_language)
-        layout.addWidget(ok_button)
+        right_layout.addWidget(ok_button)
+        right_layout.addStretch()
+
+        # Add sections to the main layout
+        main_layout.addLayout(left_layout)
+        main_layout.addSpacing(20)
+        main_layout.addWidget(separator)
+        main_layout.addSpacing(20)
+        main_layout.addLayout(right_layout)
 
     def save_language(self):
         global language_chosen
@@ -228,7 +269,7 @@ class GUI_Venv(QMainWindow):
 #-----------------------------------------------------------------------------------------------------------------------Main
 if __name__ == "__main__":
 
-    if (GUI!= False):
+    if (GUI != False):
         app = QApplication(sys.argv)
 
     print(r"""
@@ -265,18 +306,11 @@ if __name__ == "__main__":
         else:
             print(languages[language_chosen][8])
             pip_path = "pip"
-        #---------------------------------------Ask port
-        with open(SETTINGS_FILE) as file:
-            settings = json.load(file)
-        print(languages[language_chosen][14])
-        settings["port"] = input('[Default : 5000] : ')
-        with open(SETTINGS_FILE, "w") as f:
-            json.dump(settings, f, indent=4)
         finish_installation()
 
     elif configuration_chosen == "GUI":
         window = GUI_Language()
         window.show()
 
-    if (GUI!=False):
+    if (GUI != False):
         sys.exit(app.exec())
