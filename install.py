@@ -241,7 +241,8 @@ class GUI_Venv(QMainWindow):
 
         # Left Section - Logo
         left_layout = QVBoxLayout()
-        logo_pixmap = QPixmap("logo.png").scaled(400, 400, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        logo_pixmap = QPixmap("logo.png").scaled(400, 400, Qt.AspectRatioMode.KeepAspectRatio,
+                                                 Qt.TransformationMode.SmoothTransformation)
         logo_label = QLabel()
         logo_label.setPixmap(logo_pixmap)
         left_layout.addSpacing(50)
@@ -256,10 +257,11 @@ class GUI_Venv(QMainWindow):
         separator.setStyleSheet("border: 1px solid #72bf3c;")
         separator.setFixedWidth(2)
 
+        # Right Section - Text and Controls
         right_layout = QVBoxLayout()
         venv_text = languages[language_chosen][6]
         venv_label = QLabel(venv_text)
-        venv_label.setStyleSheet("font-size: 14px; padding: 8px; background-color: #2c2f33; border-radius: 5px; margin-top: 15px; margin-bottom: 5px; margin-right: 20px;")
+        venv_label.setStyleSheet("font-size: 14px; padding: 8px; background-color: #2c2f33; border-radius: 5px; margin-top: 150px; margin-bottom: 5px; margin-right: 20px;")
 
         right_layout.addWidget(venv_label)
 
@@ -267,11 +269,13 @@ class GUI_Venv(QMainWindow):
         yes_button.setStyleSheet("background-color: #72bf3c; padding: 10px; font-size: 16px; border-radius: 5px; margin-left: 50px; margin-right: 70px; margin-top: 150px;")
         yes_button.clicked.connect(self.create_venv)
         right_layout.addWidget(yes_button)
+        right_layout.addStretch()
 
         no_button = QPushButton(languages[language_chosen][10])
-        no_button.setStyleSheet("background-color: #72bf3c; padding: 10px; font-size: 16px; border-radius: 5px; margin-left: 50px; margin-right: 70px; margin-top: 150px;")
+        no_button.setStyleSheet("background-color: #72bf3c; padding: 10px; font-size: 16px; border-radius: 5px; margin-left: 50px; margin-right: 70px; margin-top: 10px;")
         no_button.clicked.connect(self.skip_venv)
         right_layout.addWidget(no_button)
+        right_layout.addStretch()
 
         # Add sections to the main layout
         main_layout.addLayout(left_layout)
