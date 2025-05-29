@@ -228,24 +228,57 @@ class GUI_Venv(QMainWindow):
 
         title = languages[language_chosen][5]
         self.setWindowTitle(f"MinePylot : {title}")
-        self.setGeometry(300, 300, 400, 200)
+        self.setWindowIcon(QIcon("logo.png"))
+        self.setGeometry(300, 100, 1100, 550)
+        self.setFixedWidth(1150)
+        self.setFixedHeight(550)
+        self.setStyleSheet("background-color: #1e1f22; color: #ffffff;")
 
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
-        layout = QVBoxLayout()
-        central_widget.setLayout(layout)
+        main_layout = QHBoxLayout()
+        central_widget.setLayout(main_layout)
 
+        # Left Section - Logo
+        left_layout = QVBoxLayout()
+        logo_pixmap = QPixmap("logo.png").scaled(400, 400, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        logo_label = QLabel()
+        logo_label.setPixmap(logo_pixmap)
+        left_layout.addSpacing(50)
+        left_layout.addWidget(logo_label, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignCenter)
+        footer_label = QLabel("2025 - Made by Lasertie and $now_")
+        footer_label.setStyleSheet("font-size: 12px; color: #555555;")
+        left_layout.addWidget(footer_label, alignment=Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignLeft)
+
+        # Separator
+        separator = QFrame()
+        separator.setFrameShape(QFrame.Shape.VLine)
+        separator.setStyleSheet("border: 1px solid #72bf3c;")
+        separator.setFixedWidth(2)
+
+        right_layout = QVBoxLayout()
         venv_text = languages[language_chosen][6]
         venv_label = QLabel(venv_text)
-        layout.addWidget(venv_label)
+        venv_label.setStyleSheet("font-size: 14px; padding: 8px; background-color: #2c2f33; border-radius: 5px; margin-top: 15px; margin-bottom: 5px; margin-right: 20px;")
+
+        right_layout.addWidget(venv_label)
 
         yes_button = QPushButton(languages[language_chosen][9])
+        yes_button.setStyleSheet("background-color: #72bf3c; padding: 10px; font-size: 16px; border-radius: 5px; margin-left: 50px; margin-right: 70px; margin-top: 150px;")
         yes_button.clicked.connect(self.create_venv)
-        layout.addWidget(yes_button)
+        right_layout.addWidget(yes_button)
 
         no_button = QPushButton(languages[language_chosen][10])
+        no_button.setStyleSheet("background-color: #72bf3c; padding: 10px; font-size: 16px; border-radius: 5px; margin-left: 50px; margin-right: 70px; margin-top: 150px;")
         no_button.clicked.connect(self.skip_venv)
-        layout.addWidget(no_button)
+        right_layout.addWidget(no_button)
+
+        # Add sections to the main layout
+        main_layout.addLayout(left_layout)
+        main_layout.addSpacing(20)
+        main_layout.addWidget(separator)
+        main_layout.addSpacing(20)
+        main_layout.addLayout(right_layout)
 
     def create_venv(self):
         global finish
