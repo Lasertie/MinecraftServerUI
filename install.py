@@ -99,7 +99,7 @@ platform_commands = {
 }
 
 #---------------------------------------------------------------Variables definitions
-SETTINGS_FILE = "settings.json"
+SETTINGS_FILE = "Config/settings.json"
 language_chosen = None
 finish = False
 system_platform = sys.platform
@@ -137,7 +137,7 @@ def finish_installation():
     print(languages[language_chosen][13])
     if pip_path == "./venv/bin/pip":
         print("\n")
-        subprocess.run(["venv/bin/python", "init_db.py"])
+        subprocess.run(["venv/bin/python", "Utils/init_db.py"])
     else:
         print("\n")
         subprocess.run([platform_commands[system_platform][0], "init_db.py"])
@@ -162,7 +162,7 @@ class GUI_Language(QMainWindow):
 
         # Left Section - Logo
         left_layout = QVBoxLayout()
-        logo_pixmap = QPixmap("logo.png").scaled(400, 400, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        logo_pixmap = QPixmap("imgs/favicon-abbg.ico").scaled(400, 400, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
         logo_label = QLabel()
         logo_label.setPixmap(logo_pixmap)
         left_layout.addSpacing(50)

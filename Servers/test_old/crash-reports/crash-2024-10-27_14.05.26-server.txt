@@ -1,0 +1,79 @@
+---- Minecraft Crash Report ----
+// I blame Dinnerbone.
+
+Time: 2024-10-27 14:05:26
+Description: Exception in server tick loop
+
+java.lang.IllegalStateException: Failed to initialize server
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:666) ~[forge-1.21.1-52.0.2-server.jar!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:267) ~[forge-1.21.1-52.0.2-server.jar!/:?] {re:classloading,pl:accesstransformer:B}
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?] {}
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- System Details --
+Details:
+	Minecraft Version: 1.21.1
+	Minecraft Version ID: 1.21.1
+	Operating System: Linux (amd64) version 6.11.0-9-generic
+	Java Version: 21.0.5-ea, Ubuntu
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode, sharing), Ubuntu
+	Memory: 60763040 bytes (57 MiB) / 380633088 bytes (363 MiB) up to 2051014656 bytes (1956 MiB)
+	CPUs: 8
+	Processor Vendor: GenuineIntel
+	Processor Name: Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz
+	Identifier: Intel64 Family 6 Model 142 Stepping 10
+	Microarchitecture: Coffee Lake
+	Frequency (GHz): 1.60
+	Number of physical packages: 1
+	Number of physical CPUs: 4
+	Number of logical CPUs: 8
+	Graphics card #0 name: UHD Graphics 620
+	Graphics card #0 vendor: Intel Corporation (0x8086)
+	Graphics card #0 VRAM (MiB): 256.00
+	Graphics card #0 deviceId: 0x5917
+	Graphics card #0 versionInfo: unknown
+	Virtual memory max (MiB): 14663.12
+	Virtual memory used (MiB): 5984.06
+	Swap memory total (MiB): 10751.99
+	Swap memory used (MiB): 455.02
+	Space in storage for jna.tmpdir (MiB): <path not set>
+	Space in storage for org.lwjgl.system.SharedLibraryExtractPath (MiB): <path not set>
+	Space in storage for io.netty.native.workdir (MiB): <path not set>
+	Space in storage for java.io.tmpdir (MiB): available: 3904.53, total: 3911.13
+	Space in storage for workdir (MiB): available: 394874.09, total: 479322.16
+	JVM Flags: 0 total; 
+	Server Running: true
+	Active Data Packs: vanilla, mod:forge (incompatible)
+	Available Data Packs: bundle, mod:forge (incompatible), trade_rebalance, vanilla
+	Enabled Feature Flags: minecraft:vanilla
+	World Generation: Stable
+	World Seed: -4989860833502133173
+	Is Modded: Definitely; Server brand changed to 'forge'
+	Type: Dedicated Server (map_server.txt)
+	ModLauncher: 10.2.1
+	ModLauncher launch target: forge_server
+	ModLauncher naming: mcp
+	ModLauncher services: 
+		/ slf4jfixer PLUGINSERVICE 
+		/ runtimedistcleaner PLUGINSERVICE 
+		/ runtime_enum_extender PLUGINSERVICE 
+		/ object_holder_definalize PLUGINSERVICE 
+		/ capability_token_subclass PLUGINSERVICE 
+		/ accesstransformer PLUGINSERVICE 
+		/ eventbus PLUGINSERVICE 
+		/ mixin PLUGINSERVICE 
+		/ fml TRANSFORMATIONSERVICE 
+		/ mixin TRANSFORMATIONSERVICE 
+	FML Language Providers: 
+		minecraft@1.0
+		lowcodefml@52
+		javafml@52.0.2
+	Mod List: 
+		forge-1.21.1-52.0.2-server.jar                    |Minecraft                     |minecraft                     |1.21.1              |DONE      |Manifest: NOSIGNATURE
+		forge-1.21.1-52.0.2-universal.jar                 |Forge                         |forge                         |52.0.2              |DONE      |Manifest: NOSIGNATURE
+	Crash Report UUID: a4b87c9d-cb3b-4930-be95-353b00ce34ab
+	FML: 0.0
+	Forge: net.minecraftforge:52.0.2

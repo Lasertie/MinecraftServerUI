@@ -1,0 +1,51 @@
+[27oct.2024 14:05:08.869] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forge_server, nogui]
+[27oct.2024 14:05:08.872] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: JVM identified as Ubuntu OpenJDK 64-Bit Server VM 21.0.5-ea+8-Ubuntu-1
+[27oct.2024 14:05:08.875] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.2.1 starting: java version 21.0.5-ea by Ubuntu; OS Linux arch amd64 version 6.11.0-9-generic
+[27oct.2024 14:05:09.028] [main/WARN] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Configuration file /home/lasertie/Documents/MinecraftServerUI/servers/test/config/fml.toml is not correct. Correcting
+[27oct.2024 14:05:09.031] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowSkipGLVersions] was corrected from null to []
+[27oct.2024 14:05:09.033] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowLogHelpMessage] was corrected from null to true
+[27oct.2024 14:05:09.034] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowSquir] was corrected from null to false
+[27oct.2024 14:05:09.035] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowShowCPU] was corrected from null to false
+[27oct.2024 14:05:09.061] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forge_server
+[27oct.2024 14:05:09.226] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=jar:file:///home/lasertie/Documents/MinecraftServerUI/servers/test/libraries/org/spongepowered/mixin/0.8.7/mixin-0.8.7.jar!/ Service=ModLauncher Env=SERVER
+[27oct.2024 14:05:09.739] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
+[27oct.2024 14:05:11.469] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forge_server' with arguments [nogui]
+[27oct.2024 14:05:11.874] [main/WARN] [oshi.util.FileUtil/]: Configuration conflict: there is more than one oshi.properties file on the classpath: [jar:file:///home/lasertie/Documents/MinecraftServerUI/servers/test/libraries/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar!/oshi.properties, jar:file:/home/lasertie/Documents/MinecraftServerUI/servers/test/libraries/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar!/oshi.properties, jar:file:///home/lasertie/Documents/MinecraftServerUI/servers/test/libraries/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar!/oshi.properties, jar:file:/home/lasertie/Documents/MinecraftServerUI/servers/test/libraries/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar!/oshi.properties]
+[27oct.2024 14:05:12.045] [main/WARN] [oshi.util.FileUtil/]: Configuration conflict: there is more than one oshi.architecture.properties file on the classpath: [jar:file:///home/lasertie/Documents/MinecraftServerUI/servers/test/libraries/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar!/oshi.architecture.properties, jar:file:/home/lasertie/Documents/MinecraftServerUI/servers/test/libraries/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar!/oshi.architecture.properties, jar:file:///home/lasertie/Documents/MinecraftServerUI/servers/test/libraries/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar!/oshi.architecture.properties, jar:file:/home/lasertie/Documents/MinecraftServerUI/servers/test/libraries/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar!/oshi.architecture.properties]
+[27oct.2024 14:05:19.172] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 52.0.2, for MC 1.21.1 with MCP 20240808.132146
+[27oct.2024 14:05:19.173] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v52.0.2 Initialized
+[27oct.2024 14:05:19.181] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Opening jdk.naming.dns/com.sun.jndi.dns to java.naming
+[27oct.2024 14:05:20.195] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[27oct.2024 14:05:20.890] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Found status: BETA_OUTDATED Current: 52.0.2 Target: 52.0.24
+[27oct.2024 14:05:22.030] [main/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[27oct.2024 14:05:23.895] [main/INFO] [net.minecraft.server.Main/]: No existing world data, creating new world
+[27oct.2024 14:05:23.901] [main/WARN] [net.minecraft.server.dedicated.DedicatedServerProperties/]: Failed to parse level-type default, defaulting to minecraft:normal
+[27oct.2024 14:05:25.047] [main/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 1290 recipes
+[27oct.2024 14:05:25.400] [main/INFO] [net.minecraft.advancements.AdvancementTree/]: Loaded 1399 advancements
+[27oct.2024 14:05:26.358] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting minecraft server version 1.21.1
+[27oct.2024 14:05:26.359] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Loading properties
+[27oct.2024 14:05:26.359] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Default game type: SURVIVAL
+[27oct.2024 14:05:26.359] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[27oct.2024 14:05:26.525] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting Minecraft server on *:25565
+[27oct.2024 14:05:26.601] [Server thread/INFO] [net.minecraft.server.network.ServerConnectionListener/]: Using epoll channel type
+[27oct.2024 14:05:26.677] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: **** FAILED TO BIND TO PORT!
+[27oct.2024 14:05:26.678] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: The exception was: io.netty.channel.unix.Errors$NativeIoException: bind(..) failed: Adresse déjà utilisée
+[27oct.2024 14:05:26.678] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: Perhaps a server is already running on that port?
+[27oct.2024 14:05:26.679] [Server thread/ERROR] [net.minecraft.server.MinecraftServer/]: Encountered an unexpected exception
+java.lang.IllegalStateException: Failed to initialize server
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:666) ~[forge-1.21.1-52.0.2-server.jar!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:267) ~[forge-1.21.1-52.0.2-server.jar!/:?]
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?]
+[27oct.2024 14:05:26.721] [Server thread/WARN] [oshi.util.FileUtil/]: Configuration conflict: there is more than one oshi.architecture.properties file on the classpath: [jar:file:///home/lasertie/Documents/MinecraftServerUI/servers/test/libraries/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar!/oshi.architecture.properties, jar:file:/home/lasertie/Documents/MinecraftServerUI/servers/test/libraries/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar!/oshi.architecture.properties, jar:file:///home/lasertie/Documents/MinecraftServerUI/servers/test/libraries/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar!/oshi.architecture.properties, jar:file:/home/lasertie/Documents/MinecraftServerUI/servers/test/libraries/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar!/oshi.architecture.properties]
+[27oct.2024 14:05:26.776] [Server thread/FATAL] [net.minecraftforge.common.ForgeMod/]: Preparing crash report with UUID a4b87c9d-cb3b-4930-be95-353b00ce34ab
+[27oct.2024 14:05:26.777] [Server thread/ERROR] [net.minecraft.server.MinecraftServer/]: This crash report has been saved to: /home/lasertie/Documents/MinecraftServerUI/servers/test/crash-reports/crash-2024-10-27_14.05.26-server.txt
+[27oct.2024 14:05:26.777] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[27oct.2024 14:05:26.778] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[27oct.2024 14:05:26.778] [Server thread/ERROR] [net.minecraft.server.MinecraftServer/]: Exception stopping the server
+java.lang.NullPointerException: Cannot invoke "net.minecraft.server.level.ServerLevel.getWorldBorder()" because "serverlevel2" is null
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.saveAllChunks(MinecraftServer.java:552) ~[forge-1.21.1-52.0.2-server.jar!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.stopServer(MinecraftServer.java:617) ~[forge-1.21.1-52.0.2-server.jar!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.dedicated.DedicatedServer.stopServer(DedicatedServer.java:565) ~[forge-1.21.1-52.0.2-server.jar!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:736) ~[forge-1.21.1-52.0.2-server.jar!/:?]
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:267) ~[forge-1.21.1-52.0.2-server.jar!/:?]
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?]
