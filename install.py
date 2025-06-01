@@ -15,7 +15,8 @@ languages = {
         12: "[INFO] -- Création du dossier \"servers\"...",
         13: "[INFO] -- Éxecution de \"init_db.py\"...",
         14: "[INFO] -- PyQt5 fonctionnel",
-        15: "[ERROR] -- PyQt5 n'est pas installé"
+        15: "[ERROR] -- PyQt5 n'est pas installé",
+        16: "Pouvez vous indiquer le chemin de java ? (Sur linux, vous pouvez utiliser 'whereis java')"
     },
     "en": {
         1: "[EN] Do you want to use the application from the command line or with a graphical interface ?",
@@ -32,7 +33,8 @@ languages = {
         12: "[INFO] -- Creation of the folder \"servers\"...",
         13: "[INFO] -- Execution of \"init_db.py\"...",
         14: "[INFO] -- PyQt5 functional",
-        15: "[ERROR] -- PyQt5 is not installed"
+        15: "[ERROR] -- PyQt5 is not installed",
+        16: "Can you provide the path to java? (On linux you can use 'whereis java')"
     },
     "de": {
         1: "[DE] Möchten Sie die Anwendung als Kommandozeile oder mit grafischer Benutzeroberfläche verwenden ?",
@@ -49,7 +51,8 @@ languages = {
         12: "[INFO] -- Anlegen des Ordners \"servers\"...",
         13: "[INFO] -- Ausführung von \"init_db.py\"...",
         14: "[INFO] -- PyQt5 funktioniert",
-        15: "[ERROR] -- PyQt5 ist nicht installiert"
+        15: "[ERROR] -- PyQt5 ist nicht installiert",
+        16: "Können Sie den Pfad zu Java angeben? (Unter Linux können Sie „whereis java“ verwenden.)"
     },
     "es": {
         1: "[ES] ¿ Desea utilizar la aplicación en la línea de comandos o con una interfaz gráfica ?",
@@ -66,7 +69,8 @@ languages = {
         12: "[INFO] -- Creación de carpeta \"servers\"...",
         13: "[INFO] -- Ejecución de \"init_db.py\"...",
         14: "[INFO] -- PyQt5 está funcionando",
-        15: "[ERROR] -- PyQt5 no está instalado"
+        15: "[ERROR] -- PyQt5 no está instalado",
+        16: "¿Podrías proporcionar la ruta a Java? (En Linux, puedes usar \"whereis java\")"
     }
 }
 
@@ -85,7 +89,7 @@ try:
 except ImportError:
     for lang_code, phrases in languages.items():
         print(phrases[15])
-    class QMainWindow():
+    class QMainWindow(): # Afin de ne pas avoir d'erreur après
         pass
     GUI = False
 
@@ -99,10 +103,11 @@ platform_commands = {
 }
 
 #---------------------------------------------------------------Variables definitions
-SETTINGS_FILE = "settings.json"
+SETTINGS_FILE = os.path.join('Config','settings.json')
 language_chosen = None
 finish = False
 system_platform = sys.platform
+logo_path = os.path.join('imgs', 'favicon-abbg.ico')
 
 #---------------------------------------------------------------Save Language
 def save_language(language):
@@ -124,30 +129,39 @@ def finish_installation():
     #---------------------------------------Dependencies installation
     print("\n")
     print(languages[language_chosen][11])
-    subprocess.run([pip_path, "install", "-r", "requirements.txt"])
+    subprocess.run([pip_path, "install", "-r", os.path.join("Utils", "requirements.txt")])
 
     #---------------------------------------Creation of the folder "servers"
     print("\n")
     print(languages[language_chosen][12])
-    if not os.path.exists("servers"):
-        os.mkdir("servers")
+    if not os.path.exists("Servers"):
+        os.mkdir("Servers")
+    
+    #---------------------------------------Add java_path to settings.json
+    print("\n")
+    print(languages[language_chosen][16])
+    with open(SETTINGS_FILE, 'r') as s:
+        settings = json.load(s)
+        settings['java_path'] = input("\n")
+    with open(SETTINGS_FILE, "w") as s:
+        json.dump(settings, s, indent=4)
 
     #---------------------------------------Execution of "init_db.py"
     print("\n")
     print(languages[language_chosen][13])
     if pip_path == "./venv/bin/pip":
         print("\n")
-        subprocess.run(["venv/bin/python", "init_db.py"])
+        subprocess.run(["venv/bin/python", os.path.join("Utils", "init_db.py")])
     else:
         print("\n")
-        subprocess.run([platform_commands[system_platform][0], "init_db.py"])
+        subprocess.run([platform_commands[system_platform][0], os.path.join("Utils", "init_db.py")])
 
 #---------------------------------------------------------------GUI Language
 class GUI_Language(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("MinePylot : Language")
-        self.setWindowIcon(QIcon("logo.png"))
+        self.setWindowIcon(QIcon(logo_path))
         self.setGeometry(300, 100, 1100, 550)
         self.setFixedWidth(1150)
         self.setFixedHeight(550)
@@ -162,7 +176,7 @@ class GUI_Language(QMainWindow):
 
         # Left Section - Logo
         left_layout = QVBoxLayout()
-        logo_pixmap = QPixmap("logo.png").scaled(400, 400, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        logo_pixmap = QPixmap(logo_path).scaled(400, 400, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
         logo_label = QLabel()
         logo_label.setPixmap(logo_pixmap)
         left_layout.addSpacing(50)
@@ -228,7 +242,7 @@ class GUI_Venv(QMainWindow):
 
         title = languages[language_chosen][5]
         self.setWindowTitle(f"MinePylot : {title}")
-        self.setWindowIcon(QIcon("logo.png"))
+        self.setWindowIcon(QIcon(os.path.join('imgs', 'favicon-abbg.ico')))
         self.setGeometry(300, 100, 1100, 550)
         self.setFixedWidth(1150)
         self.setFixedHeight(550)
@@ -241,7 +255,7 @@ class GUI_Venv(QMainWindow):
 
         # Left Section - Logo
         left_layout = QVBoxLayout()
-        logo_pixmap = QPixmap("logo.png").scaled(400, 400, Qt.AspectRatioMode.KeepAspectRatio,
+        logo_pixmap = QPixmap(logo_path).scaled(400, 400, Qt.AspectRatioMode.KeepAspectRatio,
                                                  Qt.TransformationMode.SmoothTransformation)
         logo_label = QLabel()
         logo_label.setPixmap(logo_pixmap)
