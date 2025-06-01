@@ -27,7 +27,9 @@ SERVERS_FILE = os.path.join(JSON_DIR, 'servers.json')
 VERSIONS_FILE = os.path.join(JSON_DIR, 'versions.json')
 COMMANDS_FILE = os.path.join(JSON_DIR, 'commands.json')
 SETTINGS_FILE = os.path.join(JSON_DIR, 'settings.json')
-JAVA_PATH = "/usr/bin/java"
+with open('settings.json') as f:
+    JAVA_PATH = json.load(f)
+    JAVA_PATH = JAVA_PATH['java_path'] #"/usr/bin/java"
 
 # --- User management ---
 class User(UserMixin):
@@ -291,7 +293,7 @@ def servers_ctrl():
 def server_info():
     server_name = request.args.get('name') # On recupère le paramètre
     with open('servers.json', 'r') as f:
-        servers = json.load(f)
+        servers = json.load(f)  
     if server_name in servers: # et on le compare avec la liste dans "servers.json"
         server = servers[server_name]
         # on récupère les infos du serveur
