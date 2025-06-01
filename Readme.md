@@ -1,3 +1,7 @@
+# This project is on pause for the moment due to lack of time, if you want to relaunch it you can contact me I will be delighted to continue to develop it with someone
+
+# Ce projet est en pause pour le moment faute de temps, si vous voulez le relancer vous pouvez me contacter je serai ravi de continuer a le développer avec quelqu’un
+
 ### Vous êtes français ? Moi aussi ! [Cliquez ici pour voir la version française](#french-version)
 ## Summary
 - [MineServGUI](#mineservgui)
