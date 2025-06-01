@@ -1,6 +1,6 @@
 venv_old/
 instance/
-servers/
+Servers/
 __pycache__/
 venv/
 migrations/
@@ -8,3 +8,4 @@ settings.json
 servers.json
 users.json
 testt.py
+Config/*
