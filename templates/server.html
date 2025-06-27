@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau de Bord du Serveur Minecraft</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/xterm@5.1.0/css/xterm.css">
+    <!-- <script src="xterm.js"></script> -->
     <style>
         .container {
             width: 80%;
@@ -118,9 +120,11 @@
         #firstAddvert {
             display: none;
         }
+
         #secondAddvert {
             display: none;
         }
+
         #3Addvert {
             display: none;
         }
@@ -217,6 +221,53 @@
                     <td>Statut</td>
                     <td id="Sstatus">Erreur</td>
                 </tr>
+                <tr>
+                    <div id="terminal"></div>
+
+                    <script src="https://unpkg.com/xterm@5.1.0/lib/xterm.js"></script>
+                    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
+                    <script>
+                        const term = new Terminal();
+                        term.open(document.getElementById('terminal'));
+                        let commandBuffer = '';
+                
+                        // Écouter les entrées de l'utilisateur
+                        term.onData(data => {
+                            term.write(data); // Afficher les caractères saisis
+                
+                            if (data === '\r') { // Si l'utilisateur appuie sur Entrée
+                                const command = commandBuffer;
+                                commandBuffer = ''; // Réinitialiser le buffer
+                
+                                // Envoyer la commande au serveur
+                                fetch('/send_command', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ command: command })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    term.write('\r\n' + data.response + '\r\n');
+                                })
+                                .catch(error => {
+                                    term.write('\r\nErreur: ' + error + '\r\n');
+                                });
+                            } else {
+                                commandBuffer += data; // Ajouter le caractère au buffer
+                            }
+                        });
+                
+                        // Écouter les événements du serveur
+                        const eventSource = new EventSource('/stream');
+                        eventSource.onmessage = function(event) {
+                            term.write('\r\n' + event.data + '\r\n');
+                        };
+                    </script>
+                    
+                </tr>
             </table>
         </div>
         <div class="ctl">
@@ -231,7 +282,8 @@
             <h2 lang="en">Statistics</h2>
             <p lang="fr">Joueurs en ligne: <span id="PlayerNB">E</span></p>
             <p lang="en">Players online: <span id="PlayerNB">E</span></p>
-            <p lang="fr">Utilisation de la mémoire: <span id="memUsed">Erreur</span> GB / <span id="memTot">Erreur</span>GB</p>
+            <p lang="fr">Utilisation de la mémoire: <span id="memUsed">Erreur</span> GB / <span
+                    id="memTot">Erreur</span>GB</p>
             <p lang="en">Memory usage: <span id="memUsed">Erreur</span> GB / <span id="memTot">Erreur</span>GB</p>
             <p lang="fr">Utilisation du CPU: <span id="cpUsed">Erreur</span> %</p>
             <p lang="en">CPU usage: <span id="cpUsed">Erreur</span> %</p>
@@ -284,6 +336,7 @@
                     console.log(data);
                     setInterval(updateServerInfo, 10000);
                     clearInterval
+                    term.write(data)
                 });
         });
         const stop = document.getElementById('stop')

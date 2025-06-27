@@ -1,7 +1,13 @@
 # --- User management ---
 import json
+import os
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
+
+CONFIG_DIR = os.path.join("Config")
+USERS_FILE = os.path.join(CONFIG_DIR, 'users.json')
+# with open(USERS_FILE) as f:
+#     print(json.load(f)) # En attente en cas de débuggage
 
 class User(UserMixin):
     def __init__(self, id, username, password_hash, role):

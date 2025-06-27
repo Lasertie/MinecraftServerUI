@@ -15,16 +15,23 @@ import shutil
 from functools import wraps
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_socketio import SocketIO, emit
+import threading
+import queue
 
 from Utils.Users import User
 
 app = Flask(__name__)
 app.secret_key = "b'\x84\t\x8c\x94\xdc\x1a\x8bv\x18Ac\xaf\xf4*\xeeDu\x9e\xe4y\x02\x085a'" #os.urandom(24) # On enleve la génération de clé secrete pour les tests car sinon il faut se relog a chaque essaie
-# print(app.secret_key)
+# print(app.secret_key)  #Pour les tests
+
+socketio = SocketIO(app)
+
 
 # ------------------------------------------ JSON file paths ---------------------------------- #
-JSON_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'json'))
+JSON_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'Data'))
 CONFIG_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'Config'))
+SERVERS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'Servers'))
 USERS_FILE = os.path.join(CONFIG_DIR, 'users.json')
 SERVERS_FILE = os.path.join(CONFIG_DIR, 'servers.json')
 VERSIONS_FILE = os.path.join(JSON_DIR, 'versions.json')
@@ -33,6 +40,11 @@ SETTINGS_FILE = os.path.join(CONFIG_DIR, 'settings.json')
 with open(SETTINGS_FILE) as f:
     JAVA_PATH = json.load(f)
     JAVA_PATH = JAVA_PATH['java_path'] #"/usr/bin/java"
+# with open(SERVERS_FILE) as ser:
+#     print(json.load(ser))
+
+#------------------------------------------ Variables definitions ---------------------------------- #
+processes = {}
 
 
 # ------------------------------------------------- Flask-Login setup ---------------------------------------------------#
@@ -94,7 +106,7 @@ def home():
 
 @app.route('/favicon.ico') # retour de l'icone
 def favicon():
-    return send_file('favicon-abbg.ico')
+    return send_file('imgs/favicon-abbg.ico')
 
 @app.route('/css/style.css') # retour du fichiers css
 def send_css():
@@ -143,6 +155,57 @@ def download_file(url, save_path):
         else:
             print(f"File download incomplete. Expected size: {expected_size}, Actual size: {current_size}")
 
+# File d'attente pour les messages du script
+script_output_queue = queue.Queue()
+
+
+def read_stream(stream, queue, stream_name):
+    for line in stream:
+        queue.put((stream_name, line.strip()))
+
+# Variable pour suivre l'état du terminal
+terminal_active = False
+
+@app.route('/send_command', methods=['POST'])
+def send_command():
+    data = request.json
+    command = data.get('command', '')
+    print(command)
+    script_output_queue.put(command)
+    response = "\n"#f"Commande reçue: {command}"
+    return {'response': response}
+
+@app.route('/stream')
+def stream():
+    def event_stream():
+        # Ici, vous pouvez ajouter la logique pour envoyer des mises à jour en continu
+        # Par exemple, lire la sortie d'un processus et l'envoyer au client
+        import time
+        while True:
+            time.sleep(1)
+            yield script_output_queue
+
+    return Response(event_stream(), mimetype='text/event-stream')
+
+def emit_script_output():
+    # Fonction pour émettre la sortie du script aux clients
+    while True:
+        output = script_output_queue.get()
+        socketio.emit('script_output', {'data': output})
+
+# if __name__ == '__main__':
+#     # Démarrer les threads pour lire et émettre la sortie du script
+#     output_reader_thread = threading.Thread(target=read_script_output)
+#     output_reader_thread.daemon = True
+#     output_reader_thread.start()
+
+#     output_emitter_thread = threading.Thread(target=emit_script_output)
+#     output_emitter_thread.daemon = True
+#     output_emitter_thread.start()
+
+#     socketio.run(app, debug=True)
+
+
 # |||||||||||| Nouveau serveur (API + PAGE) |||||||||||| #
 @app.route('/new-server')
 @login_required
@@ -158,7 +221,7 @@ def new_server():
             'port': data.get('serverPort', '25565'),
             'seed': data.get('serverSeed', ''),
             'maxPlayers': data.get('serverMaxPlayers', '20'),
-            'dir': "./" + os.path.join('servers', name)
+            'dir': "./" + os.path.join('Servers', name)
         }
         servers = load_json(SERVERS_FILE)
         servers[name] = cfg
@@ -218,15 +281,47 @@ def servers_ctrl():
         return jsonify({'error': 'Server not found'}), 404
     cfg = servers[name]
     if action == 'start': # Démarrer
-        print(subprocess.run(commands[cfg['type']][cfg['version']]['start'], cwd=cfg['dir'], shell=True))
+        process = subprocess.Popen(
+            commands[cfg['type']][cfg['version']]['start'], 
+            cwd=cfg['dir'], 
+            shell=True, 
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE, 
+            text=True
+             )
+
+        # Démarrer des threads pour lire stdout et stderr
+        stdout_thread = threading.Thread(target=read_stream, args=(process.stdout, script_output_queue, 'stdout'))
+        stderr_thread = threading.Thread(target=read_stream, args=(process.stderr, script_output_queue, 'stderr'))
+
+        stdout_thread.daemon = True
+        stderr_thread.daemon = True
+
+        stdout_thread.start()
+        stderr_thread.start()
+
+        processes[name] = {
+            'process': process,
+            'stdout_thread': stdout_thread,
+            'stderr_thread': stderr_thread
+        }
+
+        output_emitter_thread = threading.Thread(target=emit_script_output, args=(name,))
+        output_emitter_thread.daemon = True
+        output_emitter_thread.start()
+
     elif action == 'stop': # Arreter
         with MCRcon('localhost', 25575, 'password') as mcr:
             mcr.command('stop')
     elif action == 'kill': # Tuer
-        for p in psutil.process_iter():
-            if p.name() == 'java' and cfg['dir'] in p.cmdline():
-                p.kill()
-                break
+        if name in processes:
+            process = processes[name]['process']
+            # Utilisez une méthode appropriée pour arrêter le processus
+            process.terminate()
+            del processes[name]
+            del queues[name]
+        else:
+            return jsonify({'error': 'Server not running'}), 400
     elif action == 'delete': # Supprimer
         shutil.rmtree(cfg['dir'], ignore_errors=True)
         del servers[name]
@@ -238,9 +333,9 @@ def servers_ctrl():
 @login_required
 def server_info():
     server_name = request.args.get('name') # On recupère le paramètre
-    with open('servers.json', 'r') as f:
+    with open(SERVERS_FILE, 'r') as f:
         servers = json.load(f)  
-    if server_name in servers: # et on le compare avec la liste dans "servers.json"
+    if server_name in servers: # et on le compare avec la liste dans "SERVERS_FILE"
         server = servers[server_name]
         # on récupère les infos du serveur
         server_dir = server['dir']
@@ -282,7 +377,7 @@ def tail(file): # Fonction pour renvoyer le contenue d'un fichier en stream
 @login_required
 def server_log(): # retourne un flux
     server_name = request.args.get("name")
-    with open('servers.json') as j:
+    with open(SERVERS_FILE) as j:
         servers = json.load(j)
     log_dir = servers[server_name]['log']
     return Response(tail(log_dir))
@@ -292,7 +387,7 @@ app.route('/server-properties')
 @login_required
 def server_properties():
     server_name = request.args.get('name')
-    with open('servers.json', 'r') as f:
+    with open(SERVERS_FILE, 'r') as f:
         servers = json.load(f)
     if server_name in servers:
         server = servers[server_name]
@@ -306,7 +401,7 @@ def server_properties():
 @login_required
 def server_versions():
     # chargé le fichier json des versions
-    with open('versions.json', 'r') as f: 
+    with open(VERSIONS_FILE, 'r') as f: 
         versions = json.load(f)
     if True : #request.args.get('type') in locals():
         response = versions[request.args.get('type')]
@@ -329,7 +424,7 @@ def main_serverinfo():
 @app.route('/servers-data')
 @login_required
 def servers_data():
-    with open('servers.json', 'r') as f:
+    with open(SERVERS_FILE, 'r') as f:
         servers = json.load(f)
     for server in servers:
         server_dir = servers[server]['dir']

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Terminal Web</title>
+    <link rel="stylesheet" href="https://unpkg.com/xterm@5.1.0/css/xterm.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #terminal {
+            width: 800px;
+            height: 500px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="terminal"></div>
+
+    <script src="https://unpkg.com/xterm@5.1.0/lib/xterm.js"></script>
+    <script>
+        const term = new Terminal({
+            cursorBlink: true, // Activer le clignotement du curseur
+        });
+        term.open(document.getElementById('terminal'));
+
+        let commandBuffer = '';
+        let cursorPosition = 0;
+
+        term.onKey(e => {
+            const { key, domEvent } = e;
+
+            // Déplacement du curseur
+            if (key === '\u001b[A') { // Flèche vers le haut
+                // Logique pour gérer la flèche vers le haut
+            } else if (key === '\u001b[B') { // Flèche vers le bas
+                // Logique pour gérer la flèche vers le bas
+            } else if (key === '\u001b[C') { // Flèche vers la droite
+                if (cursorPosition < commandBuffer.length) {
+                    cursorPosition++;
+                    updateCursor();
+                }
+            } else if (key === '\u001b[D') { // Flèche vers la gauche
+                if (cursorPosition > 0) {
+                    cursorPosition--;
+                    updateCursor();
+                }
+            } else if (key === '\x7f') { // Suppression (Backspace)
+                if (cursorPosition > 0) {
+                    commandBuffer = commandBuffer.substring(0, cursorPosition - 1) + commandBuffer.substring(cursorPosition);
+                    cursorPosition--;
+                    updateTerminal();
+                }
+            } else if (key === '\x08') { // Suppression (Delete)
+                if (cursorPosition < commandBuffer.length) {
+                    commandBuffer = commandBuffer.substring(0, cursorPosition) + commandBuffer.substring(cursorPosition + 1);
+                    updateTerminal();
+                }
+            } else if (key === '\r') { // Entrée
+                term.write('\r\n');
+                const command = commandBuffer;
+                commandBuffer = '';
+                cursorPosition = 0;
+
+                // Envoyer la commande au serveur
+                fetch('/send_command', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ command: command })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    term.write(data.response + '\r\n');
+                })
+                .catch(error => {
+                    term.write('Erreur: ' + error + '\r\n');
+                });
+            } else {
+                // Ajouter le caractère au buffer à la position du curseur
+                commandBuffer = commandBuffer.substring(0, cursorPosition) + key + commandBuffer.substring(cursorPosition);
+                cursorPosition++;
+                updateTerminal();
+            }
+        });
+
+        function updateTerminal() {
+            // Effacer la ligne actuelle
+            term.write('\r\x1b[K');
+            // Réécrire le buffer
+            term.write(commandBuffer);
+            // Mettre à jour la position du curseur
+            updateCursor();
+        }
+
+        function updateCursor() {
+            // Calculer la position du curseur
+            const cursorX = cursorPosition;
+            // Déplacer le curseur à la position calculée
+            term.write(`\x1b[${cursorX}G`);
+        }
+    </script>
+</body>
+
+</html>

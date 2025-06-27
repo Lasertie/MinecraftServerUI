@@ -357,6 +357,13 @@ if __name__ == "__main__":
         else:
             print(languages[language_chosen][8])
             pip_path = "pip"
+        #-----------------------------------Ask port (Important car définit le port dans settings.json, sans ca le server ne démarerra pas)
+        with open(SETTINGS_FILE) as file:
+            settings = json.load(file)
+        print(languages[language_chosen][14])
+        settings["port"] = input('[Default : 5000] : ')
+        with open(SETTINGS_FILE, "w") as f:
+            json.dump(settings, f, indent=4)
         finish_installation()
 
     elif configuration_chosen == "GUI":

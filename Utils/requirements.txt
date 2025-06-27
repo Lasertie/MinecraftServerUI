@@ -11,3 +11,4 @@ flask_sqlalchemy
 wsgidav
 pyfunctools
 werkzeug
+flask_socketio
