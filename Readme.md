@@ -1,5 +1,4 @@
-<meta http-equiv="Refresh" content="0; url=https://codeberg.org/Zyglonk/MinePylot" /><script src="/analytics/analytics.js" defer></script>
-
+<meta http-equiv="Refresh" content="0; url=https://codeberg.org/Zyglonk/MinePylot" />
 ### Vous êtes français ? Moi aussi ! [Cliquez ici pour voir la version française](#french-version)
 ## Summary
 - [MineServGUI](#mineservgui)
