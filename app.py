@@ -176,14 +176,13 @@ def send_command():
     return {'response': response}
 
 @app.route('/stream')
-def stream():
-    def event_stream():
+def event_stream():
         # Ici, vous pouvez ajouter la logique pour envoyer des mises à jour en continu
         # Par exemple, lire la sortie d'un processus et l'envoyer au client     
-        import time
-        while True:
-            time.sleep(1)
-            yield script_output_queue
+    import time
+    while True:
+        time.sleep(1)
+        yield script_output_queue
     return Response(event_stream(), mimetype='text/event-stream')
         
 def emit_script_output():
