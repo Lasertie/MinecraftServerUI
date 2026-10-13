@@ -178,6 +178,7 @@ def send_command():
 @app.route('/stream')
 def stream():
     return Response(event_stream(), mimetype='text/event-stream')
+    
 def event_stream():
     # Ici, vous pouvez ajouter la logique pour envoyer des mises à jour en continu
     # Par exemple, lire la sortie d'un processus et l'envoyer au client     
