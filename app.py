@@ -179,14 +179,13 @@ def send_command():
 def stream():
     def event_stream():
         # Ici, vous pouvez ajouter la logique pour envoyer des mises à jour en continu
-        # Par exemple, lire la sortie d'un processus et l'envoyer au client
+        # Par exemple, lire la sortie d'un processus et l'envoyer au client     
         import time
         while True:
             time.sleep(1)
             yield script_output_queue
-
     return Response(event_stream(), mimetype='text/event-stream')
-
+        
 def emit_script_output():
     # Fonction pour émettre la sortie du script aux clients
     while True:
@@ -255,7 +254,7 @@ def new_server():
 
             # Exécuter la commande
             result = os.popen(cmd).read()
-            # result = subprocess.run(cmd, cwd=cfg['dir'], capture_output=True, text=True, check=True)
+            # result = subprocess.run(cmd, cwd=cfg['dir'], capture_output=True, text=True, check=True)  
             print("Command executed successfully")
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e.stderr}")
@@ -282,7 +281,7 @@ def servers_ctrl():
     cfg = servers[name]
     if action == 'start': # Démarrer
         process = subprocess.Popen(
-            commands[cfg['type']][cfg['version']]['start'], 
+            commands[cfg['type']][cfg['version']]['start'],
             cwd=cfg['dir'], 
             shell=True, 
             stdout=subprocess.PIPE, 
