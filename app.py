@@ -155,57 +155,45 @@ def download_file(url, save_path):
         else:
             print(f"File download incomplete. Expected size: {expected_size}, Actual size: {current_size}")
 
-# File d'attente pour les messages du script
-script_output_queue = queue.Queue()
+processes = {}   # name -> {'process': ..., 'threads': [...]}
+queues = {}      # name -> queue.Queue
 
-
-def read_stream(stream, queue, stream_name):
-    for line in stream:
-        queue.put((stream_name, line.strip()))
-
-# Variable pour suivre l'état du terminal
-terminal_active = False
-
-@app.route('/send_command', methods=['POST'])
-def send_command():
-    data = request.json
-    command = data.get('command', '')
-    print(command)
-    script_output_queue.put(command)
-    response = "\n"#f"Commande reçue: {command}"
-    return {'response': response}
+def read_stream(stream, q, stream_name):
+    """Lit un flux ligne par ligne et le met dans la queue."""
+    try:
+        for line in iter(stream.readline, ''):
+            q.put(f"[{stream_name}] {line.rstrip()}")
+    finally:
+        stream.close()
 
 @app.route('/stream')
+@login_required
 def stream():
-    return Response(event_stream(), mimetype='text/event-stream')
-    
-def event_stream():
-    # Ici, vous pouvez ajouter la logique pour envoyer des mises à jour en continu
-    # Par exemple, lire la sortie d'un processus et l'envoyer au client     
-    import time
+    name = request.args.get('name')
+    if name not in queues:
+        return jsonify({'error': 'Server not running'}), 404
+    return Response(
+        event_stream(name),
+        mimetype='text/event-stream',
+        headers={
+            'Cache-Control': 'no-cache',
+            'X-Accel-Buffering': 'no',   # utile derrière nginx
+        }
+    )
+
+def event_stream(name):
+    q = queues.get(name)
     while True:
-        time.sleep(1)
-        yield script_output_queue
-    
-        
-def emit_script_output():
-    # Fonction pour émettre la sortie du script aux clients
-    while True:
-        output = script_output_queue.get()
-        socketio.emit('script_output', {'data': output})
-
-# if __name__ == '__main__':
-#     # Démarrer les threads pour lire et émettre la sortie du script
-#     output_reader_thread = threading.Thread(target=read_script_output)
-#     output_reader_thread.daemon = True
-#     output_reader_thread.start()
-
-#     output_emitter_thread = threading.Thread(target=emit_script_output)
-#     output_emitter_thread.daemon = True
-#     output_emitter_thread.start()
-
-#     socketio.run(app, debug=True)
-
+        try:
+            line = q.get(timeout=15)
+            yield f"data: {line}\n\n"          # format SSE obligatoire
+        except queue.Empty:
+            yield ": keep-alive\n\n"           # commentaire SSE pour garder la connexion
+        # Arrêt si le processus est terminé et la queue vidée
+        proc = processes.get(name, {}).get('process')
+        if proc is None or (proc.poll() is not None and q.empty()):
+            yield "data: [Serveur arrêté]\n\n"
+            break
 
 # |||||||||||| Nouveau serveur (API + PAGE) |||||||||||| #
 @app.route('/new-server')
@@ -281,36 +269,33 @@ def servers_ctrl():
     if name not in servers:
         return jsonify({'error': 'Server not found'}), 404
     cfg = servers[name]
-    if action == 'start': # Démarrer
+    if action == 'start':
+        if name in processes and processes[name]['process'].poll() is None:
+            return jsonify({'error': 'Server already running'}), 400
+
         process = subprocess.Popen(
             commands[cfg['type']][cfg['version']]['start'],
-            cwd=cfg['dir'], 
-            shell=True, 
-            stdout=subprocess.PIPE, 
-            stderr=subprocess.PIPE, 
-            text=True
-             )
+            cwd=cfg['dir'],
+            shell=True,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            bufsize=1
+        )
 
-        # Démarrer des threads pour lire stdout et stderr
-        stdout_thread = threading.Thread(target=read_stream, args=(process.stdout, script_output_queue, 'stdout'))
-        stderr_thread = threading.Thread(target=read_stream, args=(process.stderr, script_output_queue, 'stderr'))
+        q = queue.Queue()
+        queues[name] = q
 
-        stdout_thread.daemon = True
-        stderr_thread.daemon = True
-
-        stdout_thread.start()
-        stderr_thread.start()
+        t_out = threading.Thread(target=read_stream, args=(process.stdout, q, 'stdout'), daemon=True)
+        t_err = threading.Thread(target=read_stream, args=(process.stderr, q, 'stderr'), daemon=True)
+        t_out.start()
+        t_err.start()
 
         processes[name] = {
             'process': process,
-            'stdout_thread': stdout_thread,
-            'stderr_thread': stderr_thread
+            'threads': [t_out, t_err]
         }
-
-        output_emitter_thread = threading.Thread(target=emit_script_output, args=(name,))
-        output_emitter_thread.daemon = True
-        output_emitter_thread.start()
-
     elif action == 'stop': # Arreter
         with MCRcon('localhost', 25575, 'password') as mcr:
             mcr.command('stop')
