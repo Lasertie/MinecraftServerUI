@@ -41,7 +41,7 @@ def create_user_access(username, password, role):
             try:
                 data = json.load(f)
             except json.JSONDecodeError:
-                print("")#TODO
+                print("Il y a un pb avec le fichier users.json")
 
     # Générer le nouvel id
     new_id = uuid.uuid4()

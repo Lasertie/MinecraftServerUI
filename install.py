@@ -140,15 +140,18 @@ def finish_installation():
     #---------------------------------------Add java_path to settings.json
     print("\n")
     print(languages[language_chosen][16])
+
     with open(SETTINGS_FILE, 'r') as s:
         settings = json.load(s)
         settings['java_path'] = input("\n")
+
     with open(SETTINGS_FILE, "w") as s:
         json.dump(settings, s, indent=4)
 
     #---------------------------------------Execution of "init_db.py"
     print("\n")
     print(languages[language_chosen][13])
+    
     if pip_path == "./venv/bin/pip":
         print("\n")
         subprocess.run(["venv/bin/python", os.path.join("Utils", "init_db.py")])
@@ -345,25 +348,32 @@ if __name__ == "__main__":
     #---------------------------------------Ask Language and Venv
     if configuration_chosen == "CMD":
         print("\n")
+
         for lang_code, phrases in languages.items():
             print(phrases[2])
+
         language_chosen = input("(FR/EN/DE/ES) : ").strip().lower()
         save_language(language_chosen)
         print("\n")
         venv_choice = input(languages[language_chosen][4])
+
         if venv_choice.lower() in ["o", "y", "j", "s"]:
             subprocess.run([platform_commands[system_platform][0], "-m", "venv", "venv"])
             pip_path = "./venv/bin/pip"
         else:
             print(languages[language_chosen][8])
             pip_path = "pip"
+
         #-----------------------------------Ask port (Important car définit le port dans settings.json, sans ca le server ne démarerra pas)
         with open(SETTINGS_FILE) as file:
             settings = json.load(file)
+
         print(languages[language_chosen][14])
         settings["port"] = input('[Default : 5000] : ')
+
         with open(SETTINGS_FILE, "w") as f:
             json.dump(settings, f, indent=4)
+
         finish_installation()
 
     elif configuration_chosen == "GUI":
